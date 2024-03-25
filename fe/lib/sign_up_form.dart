@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './user_data.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -17,30 +18,36 @@ class _SignUpFormState extends State<SignUpForm> {
   double _formProgress = 0;
 
   void _showWelcomeScreen() {
-  Navigator.of(context).pushNamed('/welcome');
-  
-}
-
-void _updateFormProgress() {
-  var progress = 0.0;
-  final controllers = [
-    _passwordTextController,
-    _firstNameTextController,
-    _lastNameTextController,
-    _usernameTextController,
-    _emailTextController
-  ];
-
-  for (final controller in controllers) {
-    if (controller.value.text.isNotEmpty) {
-      progress += 1 / controllers.length;
-    }
+    final userData = UserData(
+      firstName: _firstNameTextController.text,
+      lastName: _lastNameTextController.text,
+      username: _usernameTextController.text,
+      email: _emailTextController.text,
+      password: _passwordTextController.text
+    );
+    Navigator.of(context).pushNamed('/welcome', arguments: userData);
   }
 
-  setState(() {
-    _formProgress = progress;
-  });
-}
+  void _updateFormProgress() {
+    var progress = 0.0;
+    final controllers = [
+      _passwordTextController,
+      _firstNameTextController,
+      _lastNameTextController,
+      _usernameTextController,
+      _emailTextController
+    ];
+
+    for (final controller in controllers) {
+      if (controller.value.text.isNotEmpty) {
+        progress += 1 / controllers.length;
+      }
+    }
+
+    setState(() {
+      _formProgress = progress;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +68,7 @@ void _updateFormProgress() {
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
+              //obscureText: true,
               controller: _passwordTextController,
               decoration: const InputDecoration(hintText: 'Password'),
             ),
@@ -108,6 +116,7 @@ void _updateFormProgress() {
     );
   }
 }
+
 class AnimatedProgressIndicator extends StatefulWidget {
   final double value;
 

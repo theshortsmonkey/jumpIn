@@ -13,10 +13,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _showSignUpScreen() {
   Navigator.of(context).pushNamed('/signup');
-}
-
-
-
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
