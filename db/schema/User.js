@@ -23,11 +23,11 @@ const userSchema = new Schema({
         reg: {type: String, default: ''},
         make: {type: String, default: ''},
         colour: {type: String, default: ''},
-        tax_status: {type: String, default: ''},
+        tax_due_date: {type: String, default: ''},
     },
     identity_verification_status: {type: Boolean, default: false},
     driver_verification_status: {type: Boolean, default: false},
-    licence_status: {type: String, default: ''},
+    license_expiry_date: {type: String, default: ''},
     reports: [report]
 })
 
