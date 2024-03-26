@@ -16,8 +16,8 @@ class _PostRideFormState extends State<PostRideForm> {
   final _startPointTextController = TextEditingController();
   final _endPointTextController = TextEditingController();
   final _priceTextController = TextEditingController();
-  DateTime _focusedDay = DateTime.now(); // The day the calendar is focused on
-  DateTime? _selectedDay; // The user's selected day
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay; 
 
 
 

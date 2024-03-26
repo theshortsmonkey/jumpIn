@@ -8,9 +8,13 @@ EnhancedHttp http = EnhancedHttp(baseURL: 'http://localhost:1337');
 Future<Ride> fetchRides() async {
   final response = await http.get('/rides');
   print(response.body);
-  return Ride.fromJson(jsonDecode(response.body[0]) as Map<String, dynamic>);
+  final List<dynamic> rides = jsonDecode(response.body);
+  if (rides.isNotEmpty) {
+    return Ride.fromJson(rides[0] as Map<String, dynamic>);
+  } else {
+    throw Exception('No rides found');
+  }
 }
-
 class Ride {
   final int available_Seats;
   // final String id;
@@ -24,13 +28,10 @@ class Ride {
   });
 
   factory Ride.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'available_Seats' : int available_Seats
-      } => 
-      Ride(available_Seats: available_Seats),
-      _ => throw const FormatException('Nice try Barry'),
-    };
+    return Ride(
+      available_Seats: json['available_Seats'] as int,
+    );
+
   }
 }
 
@@ -57,11 +58,16 @@ class _GetRideState extends State<GetRide>{
         child: FutureBuilder<Ride>(
           future: futureRide,
           builder: (context, snapshot) {
-            if(snapshot.hasData) {
-              return Text('${snapshot.data!.available_Seats} you bloody well did it');
-            } else {
-              throw const FormatException('Nice try, buddy.');
-            }
+            if(snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            return Text('${snapshot.data!.available_Seats} seats available');
+          } else {
+            return Text('No data');
+          }
+
           },
         ),
       )
