@@ -231,3 +231,5 @@ export const testRideData = [
     date_and_time: Date.now(),
   }   
 ]
+
+export const testFileNamesArr = ['profile-pic-1.png', 'profile-pic-2.png', 'profile-pic-3.png', 'profile-pic-4.jpeg'];
