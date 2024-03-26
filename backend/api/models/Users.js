@@ -20,6 +20,7 @@ module.exports = {
     identity_verification_status: {type: 'boolean', required: true },
     driver_verification_status: {type: 'boolean', required: true },
     licence_expiry_date: {type: 'string', required: true },
+    car: {type: 'json', required: false}
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
