@@ -1,41 +1,36 @@
 import 'package:flutter/material.dart';
-import './user_data.dart';
+import './ride_data.dart';
 
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+class PostRideForm extends StatefulWidget {
+  const PostRideForm({super.key});
 
   @override
-  State<SignUpForm> createState() => _SignUpFormState();
+  State<PostRideForm> createState() => _PostRideFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController();
-  final _lastNameTextController = TextEditingController();
-  final _usernameTextController = TextEditingController();
-  final _passwordTextController = TextEditingController();
-  final _emailTextController = TextEditingController();
+class _PostRideFormState extends State<PostRideForm> {
+  final _startPointTextController = TextEditingController();
+  final _endPointTextController = TextEditingController();
+  final _priceTextController = TextEditingController();
+
 
   double _formProgress = 0;
 
-  void _showWelcomeScreen() {
-    final userData = UserData(
-      firstName: _firstNameTextController.text,
-      lastName: _lastNameTextController.text,
-      username: _usernameTextController.text,
-      email: _emailTextController.text,
-      password: _passwordTextController.text
+  void _showTestScreen() {
+    final rideData = RideData(
+      startPoint: _startPointTextController.text,
+      endPoint: _endPointTextController.text,
+      price: _priceTextController.text,
     );
-    Navigator.of(context).pushNamed('/profile', arguments: userData);
+    Navigator.of(context).pushNamed('/test', arguments: rideData);
   }
 
   void _updateFormProgress() {
     var progress = 0.0;
     final controllers = [
-      _passwordTextController,
-      _firstNameTextController,
-      _lastNameTextController,
-      _usernameTextController,
-      _emailTextController
+      _startPointTextController,
+      _endPointTextController,
+      _priceTextController,
     ];
 
     for (final controller in controllers) {
@@ -57,41 +52,26 @@ class _SignUpFormState extends State<SignUpForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedProgressIndicator(value: _formProgress), // NEW
-          Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
+          Text('Post a Ride', style: Theme.of(context).textTheme.headlineMedium),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _firstNameTextController,
-              decoration: const InputDecoration(hintText: 'First name'),
+              controller: _startPointTextController,
+              decoration: const InputDecoration(hintText: 'Start point'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _lastNameTextController,
-              decoration: const InputDecoration(hintText: 'Last name'),
+              controller: _endPointTextController,
+              decoration: const InputDecoration(hintText: 'End poing'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _emailTextController,
-              decoration: const InputDecoration(hintText: 'Email: joebloggs@example.com'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _usernameTextController,
-              decoration: const InputDecoration(hintText: 'Username'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              //obscureText: true,
-              controller: _passwordTextController,
-              decoration: const InputDecoration(hintText: 'Password'),
+              controller: _priceTextController,
+              decoration: const InputDecoration(hintText: 'Price'),
             ),
           ),
           TextButton(
@@ -108,8 +88,8 @@ class _SignUpFormState extends State<SignUpForm> {
               }),
             ),
             onPressed:
-            _formProgress == 1 ? _showWelcomeScreen : null, // UPDATED
-            child: const Text('Sign up'),
+            _formProgress == 1 ? _showTestScreen : null, // UPDATED
+            child: const Text('Create Ride'),
           ),
         ],
       ),

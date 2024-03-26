@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
-import './welcome.dart';
+import 'profile_page.dart';
 import './homepage.dart';
+import "post_ride_page.dart";
+import "./test_page.dart";
 
 void main() {
   runApp(const MyApp());
@@ -18,12 +20,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),
         useMaterial3: true,
       ),
-      // home: const MyHomePage(title: 'jumpIn'),
+      home: const MyHomePage(title: 'jumpIn'),
       routes: {
-        '/': (context) => const MyHomePage(title: 'jumpIn'),
         "/signup" : (context) => const SignUpPage(),
-        '/welcome': (context) => const WelcomeScreen(),
-      }
+        '/profile': (context) => const ProfilePage(),
+        "/postride" : (context) => const PostRidePage(),
+        "/test": (context) => const TestPage()
+        }
     );
   }
 } 

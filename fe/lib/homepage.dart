@@ -14,18 +14,31 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showSignUpScreen() {
   Navigator.of(context).pushNamed('/signup');
   }
+  void _showPostRideScreen() {
+  Navigator.of(context).pushNamed('/postride');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+         title: Text(widget.title),
+                actions: [
+                IconButton(
+                icon : const Icon(Icons.login),
+                onPressed:_showSignUpScreen ,
+                ),
+                IconButton(
+                icon : const Icon(Icons.report),
+                onPressed:_showSignUpScreen ,//report page
+                )
+      ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children:[
             FilledButton(
                 style:FilledButton.styleFrom(
                   minimumSize: const Size(400, 200)
@@ -38,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
                style:ElevatedButton.styleFrom(
                   minimumSize: const Size(400, 200)
                 ),
-            onPressed:_showSignUpScreen,
+            onPressed:_showPostRideScreen,
             child: const Text('Post a ride'),
             )
           ],
