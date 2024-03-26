@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import './ride_data.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+
+
 
 class PostRideForm extends StatefulWidget {
   const PostRideForm({super.key});
@@ -12,6 +16,9 @@ class _PostRideFormState extends State<PostRideForm> {
   final _startPointTextController = TextEditingController();
   final _endPointTextController = TextEditingController();
   final _priceTextController = TextEditingController();
+  DateTime _focusedDay = DateTime.now(); // The day the calendar is focused on
+  DateTime? _selectedDay; // The user's selected day
+
 
 
   double _formProgress = 0;
@@ -21,6 +28,7 @@ class _PostRideFormState extends State<PostRideForm> {
       startPoint: _startPointTextController.text,
       endPoint: _endPointTextController.text,
       price: _priceTextController.text,
+      date: _selectedDay,
     );
     Navigator.of(context).pushNamed('/test', arguments: rideData);
   }
@@ -74,6 +82,25 @@ class _PostRideFormState extends State<PostRideForm> {
               decoration: const InputDecoration(hintText: 'Price'),
             ),
           ),
+          Padding(
+  padding: const EdgeInsets.all(8),
+  child: TableCalendar(
+    firstDay: DateTime.utc(2010, 10, 16),
+    lastDay: DateTime.utc(2030, 3, 14),
+    focusedDay: _focusedDay,
+    calendarFormat: CalendarFormat.month,
+    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+    onDaySelected: (selectedDay, focusedDay) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay; // update `_focusedDay` here as well
+      });
+    },
+    onPageChanged: (focusedDay) {
+      _focusedDay = focusedDay;
+    },
+  ),
+),
           TextButton(
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith((states) {
