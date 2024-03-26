@@ -8,8 +8,6 @@ const connectToDB = async (connectionString) => {
       })
       console.log('Connected to Mongodb Atlas');} catch (error) {
       console.error(error);
-      const client = new mongodb.MongoClient(uri)
-      return client
   } 
 }
 export default connectToDB
