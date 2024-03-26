@@ -9,5 +9,5 @@
  */
 
 module.exports.routes = {
-
+    'GET /distance/:id': 'Rides.distance'
 };
