@@ -3,32 +3,34 @@ import mongodb from 'mongodb'
 import fs from 'fs'
 import { User } from './schema/User.js'
 import { Ride } from './schema/Ride.js'
-import { testUserData, testRideData, testFileNamesArr } from './test-data/test-seed-data.js'
+import { devUserData, devRideData, devFileNamesArr } from './test-data/dev-seed-data.js'
+import connectToDB from './connectToDb.js'
+import "dotenv/config.js";
 
-const client = new mongodb.MongoClient('mongodb://localhost:27017')
-mongoose.connect('mongodb://localhost:27017/testJumpInDb')
+const connectionString = process.env.DB_STRING
+connectToDB(connectionString)
+const client = new mongodb.MongoClient(connectionString)
 const connection = mongoose.connection
 
-connection
+connection  
   .dropDatabase()
   .then(() => {
-    const db = client.db('testJumpInDb')
+    const db = client.db('jumpIn')
     const bucket = new mongodb.GridFSBucket(db, {bucketName: 'images'})
     const __dirname = import.meta.dirname;
-    testFileNamesArr.forEach((file) => {
-        const streamWrite = bucket.openUploadStream(file)
-        fs.createReadStream(`${__dirname}/test-data/${file}`).pipe(streamWrite)
+    devFileNamesArr.forEach((file) => {
+      const streamWrite = bucket.openUploadStream(file.name,{metadata: { username: file.username}})
+      fs.createReadStream(`${__dirname}/test-data/${file.name}`).pipe(streamWrite)
     })
-    
 })
   .then(() => {
     return User.init()
   })
   .then(() => {
-    return User.create(testUserData)
+    return User.create(devUserData)
   })
   .then(() => {
-    return Ride.create(testRideData)
+    return Ride.create(devRideData)
   })
   .then(() => {
     return User.countDocuments({})

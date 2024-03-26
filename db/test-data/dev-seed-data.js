@@ -1,4 +1,4 @@
-export const testUserData = [
+export const devUserData = [
   {
     username: "testUSername1",
     firstName: "testFirstName1",
@@ -77,7 +77,7 @@ export const testUserData = [
   }
 ]
 
-export const testRideData = [
+export const devRideData = [
   {
     to: "Manchester",
     from: "Leeds",
@@ -240,4 +240,4 @@ export const testRideData = [
   }   
 ]
 
-export const testFileNamesArr = [{name:'profile-pic-1.png',username: 'testUSername1'}, {name:'profile-pic-2.png',username: 'testUSername2'}, {name:'profile-pic-3.png',username: 'testUSername3'}, {name:'profile-pic-4.jpeg',username: 'testUSername1'}];
+export const devFileNamesArr =  [{name:'profile-pic-1.png',username: 'testUSername1'}, {name:'profile-pic-2.png',username: 'testUSername2'}, {name:'profile-pic-3.png',username: 'testUSername3'}, {name:'profile-pic-4.jpeg',username: 'testUSername1'}];
