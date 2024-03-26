@@ -81,6 +81,8 @@ export const testRideData = [
   {
     to: "Manchester",
     from: "Leeds",
+    to_region: "Manchester",
+    from_region: "Leeds",
     driver_username: "testUsername1",
     rider_usernames: ["testUsername2",],
     available_Seats: 1,
@@ -119,6 +121,8 @@ export const testRideData = [
   {
     to: "Manchester",
     from: "Birmingham",
+    to_region: "Manchester",
+    from_region: "Birmingham",
     driver_username: "testUsername2",
     rider_usernames: ["testUsername3",],
     available_Seats: 1,
@@ -157,6 +161,8 @@ export const testRideData = [
   {
     to: "Manchester",
     from: "London",
+    to_region: "Manchester",
+    from_region: "London",
     driver_username: "testUsername3",
     rider_usernames: ["testUsername4",],
     available_Seats: 1,
@@ -195,6 +201,8 @@ export const testRideData = [
   {
     to: "Manchester",
     from: "Edinburgh",
+    to_region: "Manchester",
+    from_region: "Edinburgh",
     driver_username: "testUsername4",
     rider_usernames: ["testUsername1",],
     available_Seats: 1,

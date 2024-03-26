@@ -13,6 +13,8 @@ const chat = new Schema({
 const rideSchema = new Schema({
     to: String,
     from: String,
+    to_region: String,
+    from_region: String,
     driver_username: String,
     rider_usernames: Array,
     available_Seats: Number,
