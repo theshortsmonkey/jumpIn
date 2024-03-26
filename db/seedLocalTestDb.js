@@ -16,8 +16,8 @@ connection
     const bucket = new mongodb.GridFSBucket(db, {bucketName: 'images'})
     const __dirname = import.meta.dirname;
     testFileNamesArr.forEach((file) => {
-        const streamWrite = bucket.openUploadStream(file)
-        fs.createReadStream(`${__dirname}/test-data/${file}`).pipe(streamWrite)
+        const streamWrite = bucket.openUploadStream(file.name,{metadata: { username: file.username}})
+        fs.createReadStream(`${__dirname}/test-data/${file.name}`).pipe(streamWrite)
     })
     
 })

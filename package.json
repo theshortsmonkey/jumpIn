@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed-dev": "NODE_ENV=development npm run seed",
-    "seed": "node ./db/seedDevDb.js"
+    "seed-dev": "node ./db/seedDevDb.js",
+    "seed-local": "node ./db/seedLocalTestDb.js"
   },
   "keywords": [],
   "author": "",

@@ -240,4 +240,4 @@ export const devRideData = [
   }   
 ]
 
-export const devFileNamesArr = ['profile-pic-1.png', 'profile-pic-2.png', 'profile-pic-3.png', 'profile-pic-4.jpeg'];
+export const devFileNamesArr =  [{name:'profile-pic-1.png',username: 'testUSername1'}, {name:'profile-pic-2.png',username: 'testUSername2'}, {name:'profile-pic-3.png',username: 'testUSername3'}, {name:'profile-pic-4.jpeg',username: 'testUSername1'}];
