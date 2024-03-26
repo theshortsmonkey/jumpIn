@@ -4,6 +4,7 @@ import 'profile_page.dart';
 import './homepage.dart';
 import "post_ride_page.dart";
 import "./test_page.dart";
+import './api.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         "/signup" : (context) => const SignUpPage(),
         '/profile': (context) => const ProfilePage(),
         "/postride" : (context) => const PostRidePage(),
-        "/test": (context) => const TestPage()
+        "/test": (context) => const TestPage(),
+        "/apitest": (context) => const GetRide() 
         }
     );
   }

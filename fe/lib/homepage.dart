@@ -18,6 +18,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Navigator.of(context).pushNamed('/postride');
   }
 
+  void _showRidesPage() {
+  Navigator.of(context).pushNamed('/apitest');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +29,10 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: Text(widget.title),
                 actions: [
+                IconButton(
+                icon : const Icon(Icons.car_rental),
+                onPressed:_showRidesPage ,
+                ),
                 IconButton(
                 icon : const Icon(Icons.login),
                 onPressed:_showSignUpScreen ,
