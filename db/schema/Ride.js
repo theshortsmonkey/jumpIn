@@ -22,8 +22,8 @@ const rideSchema = new Schema({
     distance: Number,
     price: Number,
     map: Object,
-    driver_rating: Number,
-    rider_rating: Number,
+    driver_rating: { type: Number, default: null },
+    rider_rating: { type: Number, default: null },
     date_and_time: Date,
     chats: [chat],
 })

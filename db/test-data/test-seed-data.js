@@ -4,7 +4,6 @@ export const testUserData = [
     firstName: "testFirstName1",
     lastName: "testLastName1",
     email: "testEmail1",
-    profile_pic: "testProfilePic1",
     password: "testPassword1",
     phoneNumber: "0123456789",
     bio: "testBio testBio1",
@@ -16,14 +15,13 @@ export const testUserData = [
     },
     identity_verification_status: false,
     driver_verification_status: true,
-    licence_expiry_data: "2027-01-01",
+    licence_expiry_date: "2027-01-01",
   },
   {
     username: "testUSername2",
     firstName: "testFirstName2",
     lastName: "testLastName2",
     email: "testEmail2",
-    profile_pic: "testProfilePic2",
     password: "testPassword2",
     phoneNumber: "0123456789",
     bio: "testBio testBio2",
@@ -35,14 +33,13 @@ export const testUserData = [
     },
     identity_verification_status: true,
     driver_verification_status: false,
-    licence_expiry_data: "2027-01-02",
+    licence_expiry_date: "2027-01-02",
   },
   {
     username: "testUSername3",
     firstName: "testFirstName3",
     lastName: "testLastName3",
     email: "testEmail3",
-    profile_pic: "testProfilePic3",
     password: "testPassword3",
     phoneNumber: "0123456789",
     bio: "testBio testBio3",
@@ -54,14 +51,13 @@ export const testUserData = [
     },
     identity_verification_status: true,
     driver_verification_status: true,
-    licence_expiry_data: "2027-01-03",
+    licence_expiry_date: "2027-01-03",
   },
   {
     username: "testUSername4",
     firstName: "testFirstName4",
     lastName: "testLastName4",
     email: "testEmail4",
-    profile_pic: "testProfilePic4",
     password: "testPassword4",
     phoneNumber: "0123456789",
     bio: "testBio testBio4",
@@ -73,7 +69,7 @@ export const testUserData = [
     },
     identity_verification_status: false,
     driver_verification_status: false,
-    licence_expiry_data: "2027-01-04",
+    licence_expiry_date: "2027-01-04",
   }
 ]
 
@@ -240,4 +236,4 @@ export const testRideData = [
   }   
 ]
 
-export const testFileNamesArr = [{name:'profile-pic-1.png',username: 'testUSername1'}, {name:'profile-pic-2.png',username: 'testUSername2'}, {name:'profile-pic-3.png',username: 'testUSername3'}, {name:'profile-pic-4.jpeg',username: 'testUSername1'}];
+export const testFileNamesArr = [{name:'profile-pic-1.png',username: 'testUSername1'}, {name:'profile-pic-2.png',username: 'testUSername2'}, {name:'profile-pic-3.png',username: 'testUSername3'}, {name:'profile-pic-4.jpeg',username: 'testUSername4'}];
