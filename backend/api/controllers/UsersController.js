@@ -45,12 +45,26 @@ module.exports = {
           createReadStream(files[0].fd).pipe(streamWrite).on('close', () => {
             unlink(files[0].fd, () => {})
           })
-    
+          res.status(201)
           return res.json({
-            message: files.filename + ' uploaded successfully!'
+            message: files[0].filename + ' uploaded successfully!'
           });
         });
       
+    } catch (error) {
+      return res.badRequest(error)
+    }
+  },
+  imageDelete: async (req,res) => {
+    try {
+      const db = Users.getDatastore().manager
+      const findImage = await db
+        .collection('images.files')
+        .findOne({ metadata: { username: req.params.username } })
+
+      const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
+      bucket.delete(findImage._id)
+      return res.status(204)
     } catch (error) {
       return res.badRequest(error)
     }
