@@ -15,10 +15,9 @@ const userSchema = new Schema({
     firstName: String,
     lastName: String,
     email: String,
-    profile_pic: String,
     password: String,
     phoneNumber: String,
-    bio: String,
+    bio: {type: String, default: ''},
     car: {
         reg: {type: String, default: ''},
         make: {type: String, default: ''},

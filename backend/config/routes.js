@@ -10,5 +10,7 @@
 
 module.exports.routes = {
     'GET /distance/:id': 'Rides.distance',
-    'GET /images/:filename': 'Users.image'
+    'GET /users/:username/image': 'Users.imageDownload',
+    'POST /users/:username/image': 'Users.imageUpload',
+    'DELETE /users/:username/image': 'Users.imageDelete'
 };
