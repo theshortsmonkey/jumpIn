@@ -28,13 +28,10 @@ module.exports = {
           .pipe(createWriteStream(filePath))
           .on('close', () => {
             createReadStream(filePath).pipe(res)
-            unlink(filePath, (err) => {
-              if (err) console.log(err)
-            })
+            unlink(filePath, () => {})
           })
       }
     } catch (error) {
-      console.log('in error')
       return res.badRequest(error)
     }
   },
