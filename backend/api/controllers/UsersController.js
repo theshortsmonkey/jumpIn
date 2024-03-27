@@ -6,15 +6,30 @@
  */
 
 module.exports = {
-    image: async (req, res) => {
-        try {
-            const db = Users.getDatastore().manager;
-            console.log(db);
-            const findImage = await db.collection('images.files').find({_id: req.params.filename}).toArray();
-            res.ok(findImage);
-        } catch (error) {
-            return res.badRequest(error);
-        }
-     },     
-};
+  image: async (req, res) => {
+    try {
+      const db = Users.getDatastore().manager;
+      const findImage = await db
+        .collection("images.files")
+        .findOne({ metadata: { username: req.params.username } })
+        
+        const blobAdapter = require('@dmedina2015/skipper-gridfs')({
+            uri: 'mongodb://localhost:27017/testJumpInDb'
+        });
 
+        blobAdapter.read(findImage.filename, function(error , file) {
+            console.log(findImage.filename)
+            if(error) {
+                console.log(error)
+                res.json(error);
+            } else {
+                res.contentType('image/png');
+                res.send(new Buffer(file));
+            }
+        });
+      //res.ok(findImage);
+    } catch (error) {
+      return res.badRequest(error);
+    }
+  },
+};

@@ -5,12 +5,14 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "@dmedina2015/skipper-gridfs": "^1.1.0",
     "@sailshq/lodash": "^3.10.3",
     "sails": "^1.5.9",
     "sails-hook-orm": "^4.0.0",
     "sails-hook-sockets": "^3.0.0",
     "sails-mongo": "^2.1.0",
-    "sails-postgresql": "^5.0.1"
+    "sails-postgresql": "^5.0.1",
+    "skipper": "^0.9.4"
   },
   "devDependencies": {
     "eslint": "5.16.0"
