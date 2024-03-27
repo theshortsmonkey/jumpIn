@@ -17,7 +17,7 @@ Future<List<Ride>> fetchRides() async {
   }
 }
 
-class Ride 
+class Ride {
   final String id;
   
   const Ride ({
