@@ -17,7 +17,7 @@ const rideSchema = new Schema({
     from_region: String,
     driver_username: String,
     rider_usernames: Array,
-    available_Seats: Number,
+    available_seats: Number,
     carbon_emissions: Number,
     distance: Number,
     price: Number,
