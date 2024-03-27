@@ -9,5 +9,6 @@
  */
 
 module.exports.routes = {
-    'GET /distance/:id': 'Rides.distance'
+    'GET /distance/:id': 'Rides.distance',
+    'GET /images/:filename': 'Users.image'
 };
