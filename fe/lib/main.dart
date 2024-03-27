@@ -4,7 +4,7 @@ import 'profile_page.dart';
 import './homepage.dart';
 import "post_ride_page.dart";
 import "./test_page.dart";
-import './api.dart';
+import './all_rides.dart';
 
 void main() {
   runApp(const MyApp());

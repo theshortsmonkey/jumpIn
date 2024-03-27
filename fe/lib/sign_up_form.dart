@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './user_data.dart';
+import 'classes/post_user_class.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});

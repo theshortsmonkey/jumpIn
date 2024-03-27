@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './ride_data.dart';
+import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 

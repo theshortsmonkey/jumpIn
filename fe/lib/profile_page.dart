@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import './user_data.dart';
+import 'classes/post_user_class.dart';
 import 'package:flutter/services.dart';
 
 class ProfileScreen extends StatelessWidget {
