@@ -9,7 +9,7 @@ const { mongo } = require('mongoose')
 const { createWriteStream, createReadStream, unlink } = require('fs')
 
 module.exports = {
-  image: async (req, res) => {
+  imageDownload: async (req, res) => {
     try {
       const db = Users.getDatastore().manager
       const findImage = await db
@@ -22,7 +22,7 @@ module.exports = {
         createReadStream(filePath).pipe(res)
       } else {
         const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
-        const filePath = path + '/temp/' + findImage.filename
+        const filePath = path + '/.tmp/downloads/' + findImage.filename
         bucket
           .openDownloadStream(findImage._id)
           .pipe(createWriteStream(filePath))
@@ -31,6 +31,26 @@ module.exports = {
             unlink(filePath, () => {})
           })
       }
+    } catch (error) {
+      return res.badRequest(error)
+    }
+  },
+  imageUpload: async (req, res) => {
+    try {
+      const db = Users.getDatastore().manager
+      req.file(`image`).upload(function (err, files) {
+          if (err) return res.serverError(err);
+          const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
+          const streamWrite = bucket.openUploadStream(files[0].filename,{metadata: { username: req.params.username}})
+          createReadStream(files[0].fd).pipe(streamWrite).on('close', () => {
+            unlink(files[0].fd, () => {})
+          })
+    
+          return res.json({
+            message: files.filename + ' uploaded successfully!'
+          });
+        });
+      
     } catch (error) {
       return res.badRequest(error)
     }
