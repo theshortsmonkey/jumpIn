@@ -7,26 +7,34 @@ EnhancedHttp http = EnhancedHttp(baseURL: 'http://localhost:1337');
 Future<List<Ride>> fetchRides() async {
   final response = await http.get('/rides');
   if (response.isNotEmpty) {
-    List<Ride> rides = response.map<Ride>((item) {
-      // Ensure each item is correctly interpreted as Map<String, dynamic>
-      return Ride.fromJson(item as Map<String, dynamic>);
-    }).toList();
-    return rides;
+    return Ride.fromJsonList(response as List<Map<String, dynamic>>);
   } else {
     throw Exception('No rides found');
   }
 }
-
 class Ride {
   final String id;
-  
+  final String to;
+  final String from;
+  final String driver_username;
+  final List rider_usernames;
+
   const Ride ({
   required this.id,
+  required this.to,
+  required this.from,
+  required this.driver_username,
+  required this.rider_usernames,
+
   });
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
-      id: json['id'] as String
+      id: json['id'] as String,
+      to: json['to'] as String,
+      from: json['from'] as String,
+      driver_username: json['driver_username'] as String,
+      rider_usernames: List<String>.from(json['rider_usernames'])
     );
   }
   static List<Ride> fromJsonList(List<Map<String, dynamic>> jsonList) {
@@ -42,7 +50,7 @@ class GetRide extends StatefulWidget {
 }
 
 class _GetRideState extends State<GetRide>{
-  late Future<List<Ride>>futureRides;
+  late Future<List<Ride>> futureRides;
 
   @override
   void initState() {
@@ -62,14 +70,14 @@ class _GetRideState extends State<GetRide>{
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
-
               // Use ListView.builder to handle a list of data
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   Ride ride = snapshot.data![index];
                   return ListTile(
-                    title: Text('ID: ${ride.id}'),
+                    title: Text('To: ${ride.to}, From: ${ride.from}'),
+                    subtitle: Text('Driver: ${ride.driver_username}, Rider Usernames: ${ride.rider_usernames.join(', ')}'),
                   );
                 },
               );
@@ -82,7 +90,6 @@ class _GetRideState extends State<GetRide>{
     );
   }
 }
-
 
 
 
