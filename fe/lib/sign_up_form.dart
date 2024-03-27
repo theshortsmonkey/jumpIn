@@ -14,6 +14,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _emailTextController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
 
   double _formProgress = 0;
 
@@ -23,7 +24,8 @@ class _SignUpFormState extends State<SignUpForm> {
       lastName: _lastNameTextController.text,
       username: _usernameTextController.text,
       email: _emailTextController.text,
-      password: _passwordTextController.text
+      password: _passwordTextController.text,
+      phoneNumber: _phoneNumberController.text,
     );
     Navigator.of(context).pushNamed('/profile', arguments: userData);
   }
@@ -35,13 +37,15 @@ class _SignUpFormState extends State<SignUpForm> {
       _firstNameTextController,
       _lastNameTextController,
       _usernameTextController,
-      _emailTextController
+      _emailTextController,
+      _phoneNumberController,
     ];
 
     for (final controller in controllers) {
       if (controller.value.text.isNotEmpty) {
         progress += 1 / controllers.length;
       }
+      print(progress);
     }
 
     setState(() {
@@ -52,11 +56,11 @@ class _SignUpFormState extends State<SignUpForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      onChanged: _updateFormProgress, // NEW
+      onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AnimatedProgressIndicator(value: _formProgress), // NEW
+          AnimatedProgressIndicator(value: _formProgress), 
           Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -82,6 +86,13 @@ class _SignUpFormState extends State<SignUpForm> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
+              controller: _phoneNumberController,
+              decoration: const InputDecoration(hintText: 'Phone Number'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
               controller: _usernameTextController,
               decoration: const InputDecoration(hintText: 'Username'),
             ),
@@ -89,7 +100,6 @@ class _SignUpFormState extends State<SignUpForm> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              //obscureText: true,
               controller: _passwordTextController,
               decoration: const InputDecoration(hintText: 'Password'),
             ),
@@ -108,7 +118,7 @@ class _SignUpFormState extends State<SignUpForm> {
               }),
             ),
             onPressed:
-            _formProgress == 1 ? _showWelcomeScreen : null, // UPDATED
+            _formProgress > 0.99 ? _showWelcomeScreen : null,
             child: const Text('Sign up'),
           ),
         ],

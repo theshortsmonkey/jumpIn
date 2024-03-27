@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'jumpIn'),
       routes: {
         "/signup" : (context) => const SignUpPage(),
-        '/profile': (context) => const ProfilePage(),
+        '/profile': (context) => const ProfileScreen(),
         "/postride" : (context) => const PostRidePage(),
         "/test": (context) => const TestPage(),
-        "/apitest": (context) => const GetRide() 
+        "/allrides": (context) => const GetRide() 
         }
     );
   }

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import './user_data.dart';
 import 'package:flutter/services.dart';
 
+//change profile page to single ride page in same template
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 

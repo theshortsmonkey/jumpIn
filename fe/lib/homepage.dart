@@ -17,9 +17,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showPostRideScreen() {
   Navigator.of(context).pushNamed('/postride');
   }
-
   void _showRidesPage() {
-  Navigator.of(context).pushNamed('/apitest');
+  Navigator.of(context).pushNamed('/allrides');
   }
 
   @override

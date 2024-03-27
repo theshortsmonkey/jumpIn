@@ -4,6 +4,7 @@ class UserData {
   final String username;
   final String email;
   final String password;
+  final String phoneNumber;
 
   UserData({
     required this.firstName,
@@ -11,5 +12,6 @@ class UserData {
     required this.username,
     required this.email,
     required this.password,
+    required this.phoneNumber,
   });
 }
