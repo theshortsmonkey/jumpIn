@@ -44,13 +44,13 @@ Future<List<User>> fetchUsers() async {
 }
 
 Future<User> fetchUserByUsername(username) async {
-  final response = await http.get('/users/${username}');
+  final response = await http.get('/users?username=${username}');
   if (response.isNotEmpty) {
-      // Ensure each item is correctly interpreted as Map<String, dynamic> 
-      // NB Map = object, so Map<String, dynamic> means object key-value pairs of form {string(s): any-value-type}
-      return User.fromJson(response as Map<String, dynamic>);
+   var user = User.fromJson(response[0] as Map<String, dynamic>);
+   print(user);
+      return user;
   } else {
-    throw Exception('No User found');
+    throw Exception('No users found');
   }
 }
 

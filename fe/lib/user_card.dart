@@ -23,11 +23,8 @@ class UserCard extends StatelessWidget {
             Row(
               children: [
                 Text("${user.username}"),
-                Text("${user.lastName}"),
               ]
             ),
-            Text("${user.firstName}"),
-            Text("${user.id}"),
           ]
            
         ),

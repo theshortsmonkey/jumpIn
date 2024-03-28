@@ -23,7 +23,7 @@ class _GetUserState extends State<GetUser>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: FutureBuilder<List<User>>(
+        child: FutureBuilder<List<User>>( // Update to FutureBuilder<List<Ride>>
           future: futureUsers,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

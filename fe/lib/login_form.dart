@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'classes/get_user_login.dart';
-import 'classes/get_user_class.dart';
 import './api.dart';
 
 class LoginForm extends StatefulWidget {
@@ -10,17 +8,20 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
+
 class _LoginFormState extends State<LoginForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   bool _isPasswordObscured = true;
 
   double _formProgress = 0;
-
-  void _showProfilePage() {  
-    var futureUser = fetchUserByUsername(_usernameTextController.text);
-    Navigator.of(context).pushNamed('/profile', arguments: futureUser);
-  }
+  
+  void _showProfilePage() async {  
+  final futureUser = fetchUserByUsername(_usernameTextController.text);
+  futureUser.then((user) {
+    Navigator.of(context).pushNamed('/profile', arguments: user);
+  });
+}
   void _showSignupPage() {
     Navigator.of(context).pushNamed('/signup', );
   }
