@@ -64,10 +64,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20,),
             userData.car["tax_due_date"].isNotEmpty ?
-            itemProfile('Registiration number: ', '${userData.car["reg"]}', CupertinoIcons.check_mark),
-                        itemProfile('Model: ', '${userData.car["make"]}', CupertinoIcons.check_mark),
-                        itemProfile('Colour: ', '${userData.car["colour"]}', CupertinoIcons.check_mark),
-                        itemProfile('Tax due date: ', '${userData.car["tax_due_date"]}', CupertinoIcons.check_mark),
+            carBox(userData.car)
                         :
                         SizedBox(
               width: double.infinity,
@@ -81,6 +78,35 @@ class ProfileScreen extends StatelessWidget {
         )
         ]
         ),
+      ),
+    );
+  }
+
+  carBox(car) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                offset: Offset(0, 5),
+                color: Colors.deepOrange.withOpacity(.2),
+                spreadRadius: 2,
+                blurRadius: 10
+            )
+          ]
+      ),
+      child: Column (
+        children: [
+          const SizedBox(height: 20,),
+          itemProfile('Registration number: ', '${car["reg"]}', CupertinoIcons.check_mark),
+          const SizedBox(height: 20,),
+          itemProfile('Make: ', '${car["make"]}', CupertinoIcons.check_mark),
+          const SizedBox(height: 20,),
+          itemProfile('Colour: ', '${car["colour"]}', CupertinoIcons.check_mark),
+          const SizedBox(height: 20,),
+          itemProfile('Tax Due Date: ', '${car["tax_due_date"]}', CupertinoIcons.check_mark),
+        ]
       ),
     );
   }
