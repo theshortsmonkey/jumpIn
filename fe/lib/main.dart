@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
         "/test": (context) => const TestPage(),
         "/allrides": (context) => const GetRide(),
         "/allusers": (context) => const GetUser(),
-        "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide() 
         }
     );
