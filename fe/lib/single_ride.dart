@@ -18,9 +18,10 @@ class SingleRide extends StatefulWidget {
   @override
     void initState() {
       super.initState();
-      rideId = ModalRoute.of(context)!.settings.arguments as String;
+      //rideId = ModalRoute.of(context)!.settings.arguments as String; //think this is causing the err before initstate completes
 
-      futureRide = fetchRideById(rideId);
+      futureRide = fetchRideById();
+      print(futureRide);
     }
   
   @override

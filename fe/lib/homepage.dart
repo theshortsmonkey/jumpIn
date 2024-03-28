@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
   final String title;
+  const MyHomePage({super.key, required this.title});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: Text(widget.title),
                 actions: [
-                  IconButton(
+                IconButton(
                 icon : const Icon(Icons.verified_user_rounded),
                 onPressed:_showUsersPage ,//report page
                 ),

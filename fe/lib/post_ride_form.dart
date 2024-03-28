@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-
-
+import 'package:geocoding/geocoding.dart';
 
 class PostRideForm extends StatefulWidget {
   const PostRideForm({super.key});
@@ -14,23 +12,42 @@ class PostRideForm extends StatefulWidget {
 
 class _PostRideFormState extends State<PostRideForm> {
   final _startPointTextController = TextEditingController();
+  final _startRegionTextController = TextEditingController();
   final _endPointTextController = TextEditingController();
-  final _priceTextController = TextEditingController();
+  final _endRegionTextController = TextEditingController();
+  final _inputPriceTextController = TextEditingController();
+  int? _calculatedPrice; //in pence - to store calc'd result
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay; 
-
-
+  DateTime? _selectedDay;
+  int? _selectedSeats;
 
   double _formProgress = 0;
 
   void _showTestScreen() {
     final rideData = RideData(
       startPoint: _startPointTextController.text,
+      startRegion: _startRegionTextController.text,
       endPoint: _endPointTextController.text,
-      price: _priceTextController.text,
+      endRegion: _endRegionTextController.text,
       date: _selectedDay,
+      seatsAvailable: _selectedSeats,
+      price: _inputPriceTextController.text,
     );
-    Navigator.of(context).pushNamed('/test', arguments: rideData);
+    Navigator.of(context).pushNamed('/singleridetest', arguments: rideData);
+  }
+
+  Future<int> calculatePrice() async {
+    final startPoint = _startPointTextController.text;
+    final endPoint = _endPointTextController.text;
+    print(startPoint);
+    print(endPoint);
+    var price;
+    List<Location> locationStart = await locationFromAddress(startPoint);
+    List<Location> locationEnd = await locationFromAddress(endPoint);
+
+    setState((){
+      _calculatedPrice = price;
+    });
   }
 
   void _updateFormProgress() {
@@ -38,7 +55,7 @@ class _PostRideFormState extends State<PostRideForm> {
     final controllers = [
       _startPointTextController,
       _endPointTextController,
-      _priceTextController,
+      _inputPriceTextController,
     ];
 
     for (final controller in controllers) {
@@ -60,7 +77,8 @@ class _PostRideFormState extends State<PostRideForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedProgressIndicator(value: _formProgress), // NEW
-          Text('Post a Ride', style: Theme.of(context).textTheme.headlineMedium),
+          Text('Post a Ride',
+              style: Theme.of(context).textTheme.headlineMedium),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
@@ -71,36 +89,73 @@ class _PostRideFormState extends State<PostRideForm> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _endPointTextController,
-              decoration: const InputDecoration(hintText: 'End poing'),
+              controller: _startRegionTextController,
+              decoration:
+                  const InputDecoration(hintText: 'Select start region'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _priceTextController,
-              decoration: const InputDecoration(hintText: 'Price'),
+              controller: _endPointTextController,
+              decoration: const InputDecoration(hintText: 'End point'),
             ),
           ),
           Padding(
-  padding: const EdgeInsets.all(8),
-  child: TableCalendar(
-    firstDay: DateTime.utc(2010, 10, 16),
-    lastDay: DateTime.utc(2030, 3, 14),
-    focusedDay: _focusedDay,
-    calendarFormat: CalendarFormat.month,
-    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-    onDaySelected: (selectedDay, focusedDay) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay; // update `_focusedDay` here as well
-      });
-    },
-    onPageChanged: (focusedDay) {
-      _focusedDay = focusedDay;
-    },
-  ),
-),
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _endRegionTextController,
+              decoration: const InputDecoration(hintText: 'Select end region'),
+            ),
+          ),
+          ElevatedButton(onPressed: () {}, child: Text('Calculate price')),
+          Text('Select your date below'),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _focusedDay,
+              calendarFormat: CalendarFormat.month,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay; // update `_focusedDay` here as well
+                });
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: DropdownButton(
+              hint: Text('Select available seats'),
+              isExpanded: true,
+              onChanged: (int? newValue) {
+                setState(() {
+                  _selectedSeats = newValue;
+                  print(_selectedSeats);
+                });
+              },
+              items: [1, 2, 3, 4, 5].map<DropdownMenuItem<int>>((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text('${value}'),
+                );
+              }).toList(),
+            ),
+          ),
+          Text('We recommend a price of £X'),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _inputPriceTextController,
+              decoration: const InputDecoration(hintText: 'Price'),
+            ),
+          ),
           TextButton(
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.resolveWith((states) {
@@ -114,8 +169,7 @@ class _PostRideFormState extends State<PostRideForm> {
                     : Colors.blue;
               }),
             ),
-            onPressed:
-            _formProgress == 1 ? _showTestScreen : null, // UPDATED
+            onPressed: _formProgress == 1 ? _showTestScreen : null, // UPDATED
             child: const Text('Create Ride'),
           ),
         ],
@@ -123,7 +177,9 @@ class _PostRideFormState extends State<PostRideForm> {
     );
   }
 }
+//DROP DOWN BUTTO
 
+//ANIMATION
 class AnimatedProgressIndicator extends StatefulWidget {
   final double value;
 

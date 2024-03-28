@@ -20,9 +20,10 @@ Future<List<Ride>> fetchRides() async {
   }
 }
 
-Future<Ride> fetchRideById(id) async {
-  final response = await http.get('/rides/${id}');
+Future<Ride> fetchRideById() async {
+  final response = await http.get('/rides/6604245dad2e07545e064e81'); //hardcoded 
   if (response.isNotEmpty) {
+    print(response);
       // Ensure each item is correctly interpreted as Map<String, dynamic> 
       // NB Map = object, so Map<String, dynamic> means object key-value pairs of form {string(s): any-value-type}
       return Ride.fromJson(response as Map<String, dynamic>);
