@@ -19,5 +19,7 @@ module.exports.routes = {
 
     'GET /users/:username/image': 'Users.imageDownload',
     'POST /users/:username/image': 'Users.imageUpload',
-    'DELETE /users/:username/image': 'Users.imageDelete'
+    'DELETE /users/:username/image': 'Users.imageDelete',
+
+    'GET /': 'Home.endpoints' 
 };

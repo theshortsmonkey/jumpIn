@@ -1,0 +1,548 @@
+{
+  "GET /users": {
+    "description": "serves up an array of all the user data",
+    "queries": ["sort", "limit", "skip", "select", "omit"],
+    "exampleResponse" : [
+      {
+        "id": "660558117f41b684f8276880",
+        "username": "lucy_jones",
+        "firstName": "Lucy",
+        "lastName": "Jones",
+        "email": "lucy.jones@example.com",
+        "password": "lucy123",
+        "phoneNumber": "07700 369147",
+        "bio": "Dreamer and adventurer",
+        "identity_verification_status": true,
+        "driver_verification_status": true,
+        "car": {
+          "reg": "VW12 XYZ",
+          "make": "Peugeot",
+          "colour": "Red",
+          "tax_due_date": "2025-08-10"
+        },
+        "reports": []
+      }
+    ]
+  },
+
+  "GET /users/:username ": {
+    "description": "serves up an object containing the data of a requested username",
+    "exampleResponse" : {
+        "id": "660558117f41b684f8276880",
+        "username": "lucy_jones",
+        "firstName": "Lucy",
+        "lastName": "Jones",
+        "email": "lucy.jones@example.com",
+        "password": "lucy123",
+        "phoneNumber": "07700 369147",
+        "bio": "Dreamer and adventurer",
+        "identity_verification_status": true,
+        "driver_verification_status": true,
+        "car": {
+          "reg": "VW12 XYZ",
+          "make": "Peugeot",
+          "colour": "Red",
+          "tax_due_date": "2025-08-10"
+        },
+        "reports": []
+      }
+  },
+
+  "POST /users": {
+    "description": "add a user to the system",
+    "exampleRequest": {
+      "username": "lucy_jones",
+      "firstName": "Lucy",
+      "lastName": "Jones",
+      "email": "lucy.jones@example.com",
+      "password": "lucy123",
+      "phoneNumber": "07700 369147",
+      "bio": "Dreamer and adventurer",
+      "identity_verification_status": true,
+      "driver_verification_status": true,
+      "car": {
+        "reg": "VW12 XYZ",
+        "make": "Peugeot",
+        "colour": "Red",
+        "tax_due_date": "2025-08-10"
+      },
+      "reports": []
+    },
+    "exampleResponse" : {
+        "id": "660558117f41b684f8276880",
+        "username": "lucy_jones",
+        "firstName": "Lucy",
+        "lastName": "Jones",
+        "email": "lucy.jones@example.com",
+        "password": "lucy123",
+        "phoneNumber": "07700 369147",
+        "bio": "Dreamer and adventurer",
+        "identity_verification_status": true,
+        "driver_verification_status": true,
+        "car": {
+          "reg": "VW12 XYZ",
+          "make": "Peugeot",
+          "colour": "Red",
+          "tax_due_date": "2025-08-10"
+        },
+        "reports": []
+      }
+  },
+
+  "PATCH /users/:username": {
+    "description": "change any one of the fields within the user data",
+    "exampleRequest": {
+      "email": "lj@example.com"
+    },
+    "exampleResponse" : {
+        "id": "660558117f41b684f8276880",
+        "username": "lucy_jones",
+        "firstName": "Lucy",
+        "lastName": "Jones",
+        "email": "lj@example.com",
+        "password": "lucy123",
+        "phoneNumber": "07700 369147",
+        "bio": "Dreamer and adventurer",
+        "identity_verification_status": true,
+        "driver_verification_status": true,
+        "car": {
+          "reg": "VW12 XYZ",
+          "make": "Peugeot",
+          "colour": "Red",
+          "tax_due_date": "2025-08-10"
+        },
+        "reports": []
+      }
+  },
+  
+  "DELETE /users/:username": {
+    "description": "remove the requested user from the system"
+  },
+
+
+  "GET /users/:username/image": {
+    "description": "retrieve the profile image for the requested username",
+  },
+  "POST /users/:username/image": {
+    "description": "add the profile image for the requested username",
+  },
+  "DELETE /users/:username/image": {
+    "description": "delete the profile image for the requested username",
+  }, 
+
+
+  "GET /carbon/:username ": {
+    "description": "serves the total amount of carbon saved by the requested username",
+    "exampleResponse" : {
+      "_id": [
+        "lucy_jones"
+      ],
+      "totalCarbon": 400
+    }
+  },
+
+  "GET /distance/:username ": {
+    "description": "serves the total distance covered by the requested username",
+    "exampleResponse" : {
+      "_id": [
+        "lucy_jones"
+      ],
+      "totalDistance": 200
+    }
+  },
+
+  "GET /spend/:username ": {
+    "description": "serves the total amount spent by the requested username",
+    "exampleResponse" : {
+      "_id": [
+        "lucy_jones"
+      ],
+      "totalSpend": 4000
+    }
+  },
+
+  "GET /rides": {
+    "description": "serves up an array of all the ride data",
+    "queries": ["sort", "limit", "skip", "select", "omit"],
+    "exampleResponse" : [
+      {
+          "id": "66057c77a5a59c02b3fee869",
+          "to": "Manchester",
+          "from": "Leeds",
+          "to_region": "Manchester",
+          "from_region": "Leeds",
+          "driver_username": "lucy_jones",
+          "rider_usernames": [
+            "jamal_singh"
+          ],
+          "available_seats": 1,
+          "carbon_emissions": 122,
+          "distance": 330,
+          "price": 1000,
+          "map": {
+            "properties": {
+              "fillcolor": "rgb(33,67,11)",
+              "fillopacity": 0.4
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    35,
+                    10
+                  ],
+                  [
+                    45,
+                    45
+                  ],
+                  [
+                    15,
+                    40
+                  ],
+                  [
+                    10,
+                    20
+                  ],
+                  [
+                    35,
+                    10
+                  ]
+                ],
+                [
+                  [
+                    20,
+                    30
+                  ],
+                  [
+                    35,
+                    35
+                  ],
+                  [
+                    30,
+                    20
+                  ],
+                  [
+                    20,
+                    30
+                  ]
+                ]
+              ]
+            },
+            "type": "Feature"
+          },
+          "driver_rating": 2,
+          "rider_rating": 5,
+          "date_and_time": "2024-03-28T14:19:35.121Z",
+          "chats": [],
+          "__v": 0
+        }
+    ]
+  },
+
+  "GET /rides/:ride_id": {
+    "description": "serves up an object containing the data of a requested ride id",
+    "queries": ["sort", "limit", "skip", "select", "omit"],
+    "exampleResponse" : {
+          "id": "66057c77a5a59c02b3fee869",
+          "to": "Manchester",
+          "from": "Leeds",
+          "to_region": "Manchester",
+          "from_region": "Leeds",
+          "driver_username": "lucy_jones",
+          "rider_usernames": [
+            "jamal_singh"
+          ],
+          "available_seats": 1,
+          "carbon_emissions": 122,
+          "distance": 330,
+          "price": 1000,
+          "map": {
+            "properties": {
+              "fillcolor": "rgb(33,67,11)",
+              "fillopacity": 0.4
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    35,
+                    10
+                  ],
+                  [
+                    45,
+                    45
+                  ],
+                  [
+                    15,
+                    40
+                  ],
+                  [
+                    10,
+                    20
+                  ],
+                  [
+                    35,
+                    10
+                  ]
+                ],
+                [
+                  [
+                    20,
+                    30
+                  ],
+                  [
+                    35,
+                    35
+                  ],
+                  [
+                    30,
+                    20
+                  ],
+                  [
+                    20,
+                    30
+                  ]
+                ]
+              ]
+            },
+            "type": "Feature"
+          },
+          "driver_rating": 2,
+          "rider_rating": 5,
+          "date_and_time": "2024-03-28T14:19:35.121Z",
+          "chats": [],
+          "__v": 0
+        }
+  },
+
+  "POST /rides": {
+    "description": "add a ride to the system",
+    "exampleRequest" : {
+      "to": "Manchester",
+      "from": "Leeds",
+      "to_region": "Manchester",
+      "from_region": "Leeds",
+      "driver_username": "lucy_jones",
+      "rider_usernames": [],
+      "available_seats": 1,
+      "carbon_emissions": 122,
+      "distance": 330,
+      "price": 1000,
+      "map": {
+        "properties": {
+          "fillcolor": "rgb(33,67,11)",
+          "fillopacity": 0.4
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                35,
+                10
+              ],
+              [
+                45,
+                45
+              ],
+              [
+                15,
+                40
+              ],
+              [
+                10,
+                20
+              ],
+              [
+                35,
+                10
+              ]
+            ],
+            [
+              [
+                20,
+                30
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                30,
+                20
+              ],
+              [
+                20,
+                30
+              ]
+            ]
+          ]
+        },
+        "type": "Feature"
+      },
+      "driver_rating": 2,
+      "rider_rating": 5,
+      "date_and_time": "2024-03-28T14:19:35.121Z",
+      "chats": [],
+      "__v": 0
+    },
+    "exampleResponse" : {
+      "id": "66057c77a5a59c02b3fee869",
+      "to": "Manchester",
+      "from": "Leeds",
+      "to_region": "Manchester",
+      "from_region": "Leeds",
+      "driver_username": "lucy_jones",
+      "rider_usernames": [],
+      "available_seats": 1,
+      "carbon_emissions": 122,
+      "distance": 330,
+      "price": 1000,
+      "map": {
+        "properties": {
+          "fillcolor": "rgb(33,67,11)",
+          "fillopacity": 0.4
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                35,
+                10
+              ],
+              [
+                45,
+                45
+              ],
+              [
+                15,
+                40
+              ],
+              [
+                10,
+                20
+              ],
+              [
+                35,
+                10
+              ]
+            ],
+            [
+              [
+                20,
+                30
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                30,
+                20
+              ],
+              [
+                20,
+                30
+              ]
+            ]
+          ]
+        },
+        "type": "Feature"
+      },
+      "driver_rating": 2,
+      "rider_rating": 5,
+      "date_and_time": "2024-03-28T14:19:35.121Z",
+      "chats": [],
+      "__v": 0
+    }
+},
+
+"PATCH /rides/:ride_id": {
+  "description": "change any one of the fields within the ride data",
+  "exampleRequest" : {
+    "rider_usernames": [
+      "jamal_singh"
+    ]
+  },
+  "exampleResponse" : {
+    "id": "66057c77a5a59c02b3fee869",
+    "to": "Manchester",
+    "from": "Leeds",
+    "to_region": "Manchester",
+    "from_region": "Leeds",
+    "driver_username": "lucy_jones",
+    "rider_usernames": [
+      "jamal_singh"
+    ],
+    "available_seats": 1,
+    "carbon_emissions": 122,
+    "distance": 330,
+    "price": 1000,
+    "map": {
+      "properties": {
+        "fillcolor": "rgb(33,67,11)",
+        "fillopacity": 0.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35,
+              10
+            ],
+            [
+              45,
+              45
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              10,
+              20
+            ],
+            [
+              35,
+              10
+            ]
+          ],
+          [
+            [
+              20,
+              30
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              30,
+              20
+            ],
+            [
+              20,
+              30
+            ]
+          ]
+        ]
+      },
+      "type": "Feature"
+    },
+    "driver_rating": 2,
+    "rider_rating": 5,
+    "date_and_time": "2024-03-28T14:19:35.121Z",
+    "chats": [],
+    "__v": 0
+  }
+},
+
+"DELETE /rides/:ride_id": {
+  "description": "delete the ride data for the requested ride id",
+}
+
+}
