@@ -59,14 +59,8 @@ module.exports = {
         createReadStream(filePath).pipe(res)
       } else {
         const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
-        const filePath = path + '/.tmp/downloads/' + findImage.filename
         bucket
-          .openDownloadStream(findImage._id)
-          .pipe(createWriteStream(filePath))
-          .on('close', () => {
-            createReadStream(filePath).pipe(res)
-            unlink(filePath, () => {})
-          })
+          .openDownloadStream(findImage._id).pipe(res)
       }
     } catch (error) {
       return res.badRequest(error)
