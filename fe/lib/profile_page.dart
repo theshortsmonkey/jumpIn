@@ -12,6 +12,10 @@ class ProfileScreen extends StatelessWidget {
     final userData = ModalRoute.of(context)!.settings.arguments as UserData;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+         title: const Text('jumpIn')
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

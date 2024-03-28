@@ -11,7 +11,7 @@ class GetRide extends StatefulWidget {
 }
 
 class _GetRideState extends State<GetRide>{
-  late Future<List<Ride>>futureRides;
+  late Future<List<Ride>> futureRides;
 
   @override
   void initState() {
@@ -22,6 +22,10 @@ class _GetRideState extends State<GetRide>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+         title: const Text('jumpIn')
+      ),
       body: Center(
         child: FutureBuilder<List<Ride>>( // Update to FutureBuilder<List<Ride>>
           future: futureRides,
@@ -32,7 +36,7 @@ class _GetRideState extends State<GetRide>{
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
 
-              // Use ListView.builder to handle a list of data
+              // Use ListView.builder to loop through snapshot.data and render a card for each ride
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {

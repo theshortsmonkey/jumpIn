@@ -23,6 +23,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyleL = theme.textTheme.bodyLarge;
+    final titleStyleL = theme.textTheme.titleLarge;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -51,7 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   minimumSize: const Size(400, 200)
                 ),
             onPressed:_showSignUpScreen,
-            child: const Text('Find a ride'),
+            child: Text(
+              'Find a ride',
+              style: titleStyleL),
             ),
             const SizedBox(height:30),
             ElevatedButton(
@@ -59,7 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   minimumSize: const Size(400, 200)
                 ),
             onPressed:_showPostRideScreen,
-            child: const Text('Post a ride'),
+            child: Text(
+              'Post a ride',
+              style: titleStyleL
+            ),
             )
           ],
         ),
