@@ -1,24 +1,24 @@
 class User {
   final String? id;
-  final String? username;
+  final String username;
   final String? firstName;
   final String? lastName;
   final String? email;
   final String? phoneNumber;
   final String? bio;
-  final bool? identity_verification_status;
+  final bool identity_verification_status;
   final bool? driver_verification_status;
   final dynamic car;
   
   const User ({
   this.id,
-  this.username,
+  this.username = "",
   this.firstName,
   this.lastName,
   this.email,
   this.phoneNumber,
   this.bio,
-  this.identity_verification_status,
+  this.identity_verification_status = false,
   this.driver_verification_status,
   this.car
   });

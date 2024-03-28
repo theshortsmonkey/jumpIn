@@ -47,7 +47,6 @@ Future<User> fetchUserByUsername(username) async {
   final response = await http.get('/users?username=${username}');
   if (response.isNotEmpty) {
    var user = User.fromJson(response[0] as Map<String, dynamic>);
-   print(user);
       return user;
   } else {
     throw Exception('No users found');

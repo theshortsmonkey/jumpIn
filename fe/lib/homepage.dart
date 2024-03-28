@@ -20,8 +20,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showRidesPage() {
   Navigator.of(context).pushNamed('/allrides');
   }
-  void _showLoginPage() {
-  Navigator.of(context).pushNamed('/login');
+  void _showProfilePage() {
+  Navigator.of(context).pushNamed('/profile');
   }
 
   @override
@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 actions: [
                   IconButton(
                 icon : const Icon(Icons.verified_user_rounded),
-                onPressed:_showLoginPage ,//report page
+                onPressed:_showProfilePage ,
                 ),
                 IconButton(
                 icon : const Icon(Icons.car_rental),
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 IconButton(
                 icon : const Icon(Icons.report),
-                onPressed:_showSignUpScreen ,//report page
+                onPressed:_showSignUpScreen ,
                 )
                 
       ],

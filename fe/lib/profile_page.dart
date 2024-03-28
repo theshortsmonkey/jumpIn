@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'classes/get_user_class.dart';
+import 'package:provider/provider.dart';
+import "./auth_provider.dart";
+
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userData = ModalRoute.of(context)!.settings.arguments as User;
+    final userData = context.read<AuthState>().userInfo;
 
     return Scaffold(
       appBar: AppBar(
@@ -20,20 +22,6 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const SizedBox(height: 40),
-            const CircleAvatar(
-              radius: 70,
-              backgroundImage: AssetImage('assets/images/user.JPG'),
-            ),
-            const SizedBox(height: 20),
-            itemProfile('Name', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
-            const SizedBox(height: 10),
-            itemProfile('Username', '${userData.username}', CupertinoIcons.location),
-            const SizedBox(height: 10),
-            itemProfile('Email', '${userData.email}', CupertinoIcons.mail),
-            const SizedBox(height: 20,),
-            itemProfile('Phone', '${userData.phoneNumber}', CupertinoIcons.phone),
-            const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -43,7 +31,36 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: const Text('Edit Profile')
               ),
-            )
+            ),
+            const SizedBox(height: 40),
+            const CircleAvatar(
+              radius: 70,
+              backgroundImage: AssetImage('assets/images/user.JPG'),
+            ),
+            const SizedBox(height: 20),
+            itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
+            const SizedBox(height: 10),
+            itemProfile('Username', '${userData.username}', CupertinoIcons.location),
+            const SizedBox(height: 10),
+            itemProfile('Email', '${userData.email}', CupertinoIcons.mail),
+            const SizedBox(height: 20,),
+            itemProfile('Phone', '${userData.phoneNumber}', CupertinoIcons.phone),
+            const SizedBox(height: 20,),
+            itemProfile('Bio', '${userData.bio}', CupertinoIcons.profile_circled),
+            const SizedBox(height: 20),
+            userData.identity_verification_status ? 
+            itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
+            :
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(15),
+                  ),
+                  child: const Text('Validate Licence')
+              ),
+            ),
           ],
         ),
       ),
@@ -68,7 +85,6 @@ class ProfileScreen extends StatelessWidget {
         title: Text(title),
         subtitle: Text(subtitle),
         leading: Icon(iconData),
-        trailing: Icon(Icons.arrow_forward, color: Colors.grey.shade400),
         tileColor: Colors.white,
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './api.dart';
-
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -16,12 +17,7 @@ class _LoginFormState extends State<LoginForm> {
 
   double _formProgress = 0;
   
-  void _showProfilePage() async {  
-  final futureUser = fetchUserByUsername(_usernameTextController.text);
-  futureUser.then((user) {
-    Navigator.of(context).pushNamed('/profile', arguments: user);
-  });
-}
+  
   void _showSignupPage() {
     Navigator.of(context).pushNamed('/signup', );
   }
@@ -93,7 +89,13 @@ class _LoginFormState extends State<LoginForm> {
               }),
             ),
             onPressed:
-            _formProgress > 0.99 ? _showProfilePage : null,
+            _formProgress > 0.99 ? () async {  
+  final futureUser = fetchUserByUsername(_usernameTextController.text);
+  futureUser.then((user) {
+    context.read<AuthState>().setUser(user);
+    Navigator.of(context).pushNamed('/');
+  });
+} : null,
             child: const Text('Login'),
           ),
           TextButton(

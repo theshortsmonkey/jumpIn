@@ -8,6 +8,8 @@ import "./test_page.dart";
 import './all_rides.dart';
 import './single_ride.dart';
 import 'package:google_fonts/google_fonts.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 
 void main() {
@@ -19,7 +21,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthState()),
+        // other providers
+      ],
+      builder: (context, child) => MaterialApp(
       title: 'jumpIn',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),
@@ -37,7 +44,12 @@ class MyApp extends StatelessWidget {
           displaySmall: GoogleFonts.pacifico(),
         )
       ),
-      home: const MyHomePage(title: 'jumpIn'),
+      home: Consumer<AuthState>(builder: (context, authState, _) {
+        return authState.isAuthorized
+              ? const MyHomePage(title:"jumpIn")
+              :
+              const LoginPage();
+      }),
       routes: {
         "/signup" : (context) => const SignUpPage(),
         "/login" : (context) => const LoginPage(),
@@ -47,6 +59,7 @@ class MyApp extends StatelessWidget {
         "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide() 
         }
-    );
+    )
+   );
   }
 } 
