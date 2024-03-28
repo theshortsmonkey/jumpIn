@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = context.read<AuthState>().userInfo;
-
+    print(userData.car["tax_due_date"].isNotEmpty);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -50,6 +50,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             userData.identity_verification_status ? 
             itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
+            //userData.licence_expiry_date
             :
             SizedBox(
               width: double.infinity,
@@ -61,7 +62,24 @@ class ProfileScreen extends StatelessWidget {
                   child: const Text('Validate Licence')
               ),
             ),
-          ],
+            const SizedBox(height: 20,),
+            userData.car["tax_due_date"].isNotEmpty ?
+            itemProfile('Registiration number: ', '${userData.car["reg"]}', CupertinoIcons.check_mark),
+                        itemProfile('Model: ', '${userData.car["make"]}', CupertinoIcons.check_mark),
+                        itemProfile('Colour: ', '${userData.car["colour"]}', CupertinoIcons.check_mark),
+                        itemProfile('Tax due date: ', '${userData.car["tax_due_date"]}', CupertinoIcons.check_mark),
+                        :
+                        SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(15),
+                  ),
+                  child: const Text('Validate vehicle')
+              ),
+        )
+        ]
         ),
       ),
     );
