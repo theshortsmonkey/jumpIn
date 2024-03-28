@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:geocode/geocode.dart';
+import 'dart:async';
+import 'api.dart';
 
 class PostRideForm extends StatefulWidget {
   const PostRideForm({super.key});
@@ -16,7 +18,7 @@ class _PostRideFormState extends State<PostRideForm> {
   final _endPointTextController = TextEditingController();
   final _endRegionTextController = TextEditingController();
   final _inputPriceTextController = TextEditingController();
-  int? _calculatedPrice; //in pence - to store calc'd result
+  dynamic? _calculatedPrice; //in pence - to store calc'd result
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int? _selectedSeats;
@@ -36,18 +38,32 @@ class _PostRideFormState extends State<PostRideForm> {
     Navigator.of(context).pushNamed('/singleridetest', arguments: rideData);
   }
 
-  Future<int> calculatePrice() async {
-    final startPoint = _startPointTextController.text;
-    final endPoint = _endPointTextController.text;
-    print(startPoint);
-    print(endPoint);
-    var price;
-    List<Location> locationStart = await locationFromAddress(startPoint);
-    List<Location> locationEnd = await locationFromAddress(endPoint);
+  Future calculatePrice() async {
+    GeoCode geoCode = GeoCode();
+    List<Future<Coordinates>> futures = [
+      geoCode.forwardGeocoding(address: _startPointTextController.text),
+      geoCode.forwardGeocoding(address: _endPointTextController.text),
+    ];
 
-    setState((){
-      _calculatedPrice = price;
+    Future.wait(futures).then((List<Coordinates> results) {
+    // Handle the results of all completed futures
+      final double? startLat = results[0].latitude;
+      final double? startLong = results[0].longitude; 
+      final double? endLat = results[1].latitude;
+      final double? endLong = results[1].longitude;
+
+      final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
+
+      final dynamic geoapifyResponse = fetchDistance(apiString);
+      print(geoapifyResponse.runtimeType);
+
+    }).catchError((error) {
+    // Handle errors if any of the futures fail
+      print('Error occurred: $error');
     });
+    // setState((){
+    //   _calculatedPrice = price;
+    // });
   }
 
   void _updateFormProgress() {
@@ -108,7 +124,7 @@ class _PostRideFormState extends State<PostRideForm> {
               decoration: const InputDecoration(hintText: 'Select end region'),
             ),
           ),
-          ElevatedButton(onPressed: () {}, child: Text('Calculate price')),
+          ElevatedButton(onPressed: () { calculatePrice(); }, child: Text('Calculate price')),
           Text('Select your date below'),
           Padding(
             padding: const EdgeInsets.all(8),

@@ -4,7 +4,7 @@ import 'dart:async';
 import "./classes/get_user_class.dart";
 
 EnhancedHttp http = EnhancedHttp(baseURL: 'http://localhost:1337');
-
+EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
 //
 Future<List<Ride>> fetchRides() async {
   final response = await http.get('/rides');
@@ -44,6 +44,11 @@ Future<List<User>> fetchUsers() async {
   }
 }
 
+Future fetchDistance(waypoints) async {
+  final response = await httpGeoapify.get('?waypoints=${waypoints}&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
+  print(response["features"][0]["properties"]["distance"]);
+  return response;
+}
 
 
 
