@@ -1,3 +1,4 @@
+import './login_page.dart';
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
 import 'profile_page.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'jumpIn'),
       routes: {
         "/signup" : (context) => const SignUpPage(),
+        "/login" : (context) => const LoginPage(),
         '/profile': (context) => const ProfileScreen(),
         "/postride" : (context) => const PostRidePage(),
         "/test": (context) => const TestPage(),

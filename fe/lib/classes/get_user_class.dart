@@ -4,16 +4,11 @@ class User {
   final String? firstName;
   final String? lastName;
   final String? email;
-  final String? profile_pic;
-  final String? password;
   final String? phoneNumber;
   final String? bio;
   final bool? identity_verification_status;
   final bool? driver_verification_status;
   final dynamic car;
-
-
-  
   
   const User ({
   this.id,
@@ -21,8 +16,6 @@ class User {
   this.firstName,
   this.lastName,
   this.email,
-  this.profile_pic,
-  this.password,
   this.phoneNumber,
   this.bio,
   this.identity_verification_status,
@@ -37,6 +30,11 @@ class User {
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      bio: json['bio'] as String,
+      identity_verification_status: json['identity_verification_status'] as bool,
+      driver_verification_status: json['identity_verification_status'] as bool,
+      car: json['car'] as dynamic,
     );
   }
   static List<User> fromJsonList(List<Map<String, dynamic>> jsonList) {

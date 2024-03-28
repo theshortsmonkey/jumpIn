@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'classes/post_user_class.dart';
 import 'package:flutter/services.dart';
+import './api.dart';
+import 'classes/get_user_class.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,7 +10,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userData = ModalRoute.of(context)!.settings.arguments as UserData;
+    final userData = ModalRoute.of(context)!.settings.arguments as User;
 
     return Scaffold(
       appBar: AppBar(

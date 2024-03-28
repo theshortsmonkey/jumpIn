@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
-import 'classes/post_user_class.dart';
+import 'classes/get_user_login.dart';
+import 'classes/get_user_class.dart';
+import './api.dart';
 
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
   @override
-  State<SignUpForm> createState() => _SignUpFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController();
-  final _lastNameTextController = TextEditingController();
+class _LoginFormState extends State<LoginForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-  final _emailTextController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
+  bool _isPasswordObscured = true;
 
   double _formProgress = 0;
 
-  void _showWelcomeScreen() {
-    final userData = UserData(
-      firstName: _firstNameTextController.text,
-      lastName: _lastNameTextController.text,
-      username: _usernameTextController.text,
-      email: _emailTextController.text,
-      password: _passwordTextController.text,
-      phoneNumber: _phoneNumberController.text,
-    );
-    Navigator.of(context).pushNamed('/profile', arguments: userData);
+  void _showProfilePage() {  
+    var futureUser = fetchUserByUsername(_usernameTextController.text);
+    Navigator.of(context).pushNamed('/profile', arguments: futureUser);
+  }
+  void _showSignupPage() {
+    Navigator.of(context).pushNamed('/signup', );
   }
 
   void _updateFormProgress() {
     var progress = 0.0;
     final controllers = [
-      _passwordTextController,
-      _firstNameTextController,
-      _lastNameTextController,
       _usernameTextController,
-      _emailTextController,
-      _phoneNumberController,
+      _passwordTextController,
     ];
 
     for (final controller in controllers) {
@@ -51,6 +42,11 @@ class _SignUpFormState extends State<SignUpForm> {
       _formProgress = progress;
     });
   }
+  void _setIsPasswordObscured() {
+    setState(() {
+      _isPasswordObscured = !_isPasswordObscured;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,35 +56,7 @@ class _SignUpFormState extends State<SignUpForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedProgressIndicator(value: _formProgress), 
-          Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _firstNameTextController,
-              decoration: const InputDecoration(hintText: 'First name'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _lastNameTextController,
-              decoration: const InputDecoration(hintText: 'Last name'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _emailTextController,
-              decoration: const InputDecoration(hintText: 'Email: joebloggs@example.com'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _phoneNumberController,
-              decoration: const InputDecoration(hintText: 'Phone Number'),
-            ),
-          ),
+          Text('Login', style: Theme.of(context).textTheme.headlineMedium),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
@@ -99,8 +67,15 @@ class _SignUpFormState extends State<SignUpForm> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
+              obscureText: _isPasswordObscured,
+              decoration: InputDecoration(
+                hintText: 'Password', 
+                suffixIcon: IconButton(
+                  icon: Icon(_isPasswordObscured ? Icons.visibility : Icons.visibility_off),
+                  onPressed:_setIsPasswordObscured,
+                )
+              ),
               controller: _passwordTextController,
-              decoration: const InputDecoration(hintText: 'Password'),
             ),
           ),
           TextButton(
@@ -117,7 +92,23 @@ class _SignUpFormState extends State<SignUpForm> {
               }),
             ),
             onPressed:
-            _formProgress > 0.99 ? _showWelcomeScreen : null,
+            _formProgress > 0.99 ? _showProfilePage : null,
+            child: const Text('Login'),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.resolveWith((states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : Colors.white;
+              }),
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : Colors.blue;
+              }),
+            ),
+            onPressed:_showSignupPage,
             child: const Text('Sign up'),
           ),
         ],
