@@ -95,7 +95,7 @@ module.exports = {
 
       const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
       bucket.delete(findImage._id)
-      return res.status(204)
+      return res.status(204).send()
     } catch (error) {
       return res.badRequest(error)
     }
