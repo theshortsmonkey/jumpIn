@@ -4,9 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed-dev": "node ./db/seedDevDb.js",
+    "seed-local": "node ./db/seedLocalTestDb.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "gridfs-stream": "^1.1.1",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.2.3"
+  },
+  "type": "module"
 }
