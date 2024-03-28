@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import './api.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -20,8 +23,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showRidesPage() {
   Navigator.of(context).pushNamed('/allrides');
   }
-  void _showProfilePage() {
-  Navigator.of(context).pushNamed('/profile');
+  void _showProfilePage() async {
+    final futureUser = fetchUserByUsername('testUSername1');
+    futureUser.then((user) {
+      context.read<AuthState>().setUser(user);
+      Navigator.of(context).pushNamed('/profile');
+    });
   }
 
   @override

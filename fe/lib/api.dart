@@ -53,6 +53,17 @@ Future<User> fetchUserByUsername(username) async {
   }
 }
 
+// Future<User> fetchImageByUsername(username) async {
+//   final response = await http.get('/users/${username}/image');
+//   if (response.isNotEmpty) {
+//    var _profileImage = Image.memory(response.bodyBytes).image
+//    return _profileImage
+//   } else {
+//     throw Exception('No image found');
+//   }
+// }
+
+
 
 
 

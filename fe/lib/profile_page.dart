@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'classes/get_user_class.dart';
 import 'package:provider/provider.dart';
 import "./auth_provider.dart";
+import './api.dart';
 
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final userData = context.read<AuthState>().userInfo;
-    print(userData.car["tax_due_date"].isNotEmpty);
+    // getUserImage(userData.username);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -35,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 40),
             const CircleAvatar(
               radius: 70,
-              backgroundImage: AssetImage('assets/images/user.JPG'),
+              backgroundImage: NetworkImage('http://localhost:1337/users/testUSername4/image'),
             ),
             const SizedBox(height: 20),
             itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
