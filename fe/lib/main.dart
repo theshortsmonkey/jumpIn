@@ -5,6 +5,7 @@ import './homepage.dart';
 import "post_ride_page.dart";
 import "./test_page.dart";
 import './all_rides.dart';
+import "./all_users.dart";
 import './single_ride.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -42,6 +43,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfileScreen(),
         "/postride" : (context) => const PostRidePage(),
         "/test": (context) => const TestPage(),
+        "/allrides": (context) => const GetRide(),
+        "/allusers": (context) => const GetUser(),
         "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide() 
         }
