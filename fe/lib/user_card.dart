@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-class RideCard extends StatelessWidget {
-  final ride;
-  const RideCard({
+
+class UserCard extends StatelessWidget {
+  final user;
+  const UserCard({
     super.key,
-    required this.ride
+    required this.user
   });
 
   @override
@@ -21,12 +22,12 @@ class RideCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text("${ride.id}"),
-                Text("${ride.id}"),
+                Text("${user.username}"),
+                Text("${user.lastName}"),
               ]
             ),
-            Text("${ride.id}"),
-            Text("${ride.id}"),
+            Text("${user.firstName}"),
+            Text("${user.id}"),
           ]
            
         ),

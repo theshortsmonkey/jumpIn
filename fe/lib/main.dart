@@ -5,6 +5,7 @@ import './homepage.dart';
 import "post_ride_page.dart";
 import "./test_page.dart";
 import './all_rides.dart';
+import "./all_users.dart";
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfileScreen(),
         "/postride" : (context) => const PostRidePage(),
         "/test": (context) => const TestPage(),
-        "/allrides": (context) => const GetRide() 
+        "/allrides": (context) => const GetRide(),
+        "/allusers": (context) => const GetUser(),
         }
     );
   }

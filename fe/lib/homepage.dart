@@ -20,6 +20,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showRidesPage() {
   Navigator.of(context).pushNamed('/allrides');
   }
+  void _showUsersPage() {
+  Navigator.of(context).pushNamed('/allusers');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,10 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: Text(widget.title),
                 actions: [
+                  IconButton(
+                icon : const Icon(Icons.verified_user_rounded),
+                onPressed:_showUsersPage ,//report page
+                ),
                 IconButton(
                 icon : const Icon(Icons.car_rental),
                 onPressed:_showRidesPage ,
@@ -40,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon : const Icon(Icons.report),
                 onPressed:_showSignUpScreen ,//report page
                 )
+                
       ],
       ),
       body: Center(
