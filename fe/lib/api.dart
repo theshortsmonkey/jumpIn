@@ -64,12 +64,12 @@ Future fetchDistance(waypoints) async {
   return response;
 }
 
-Future fetchCarDetails() async {
+// Future fetchCarDetails() async {
 
-  //just using co2 and fuel type 
-  final respones = await 
-  return response
-}
+//   //just using co2 and fuel type 
+//   final respones = await 
+//   return response
+// }
 
 
 // Future<User> fetchImageByUsername(username) async {

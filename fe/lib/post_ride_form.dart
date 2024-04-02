@@ -1,3 +1,4 @@
+import 'package:fe/classes/get_user_login.dart';
 import 'package:flutter/material.dart';
 import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -21,6 +22,7 @@ class _PostRideFormState extends State<PostRideForm> {
   final _endPointTextController = TextEditingController();
   final _endRegionTextController = TextEditingController();
   final _inputPriceTextController = TextEditingController();
+  final _inputRegTextController = TextEditingController();
   dynamic? _calculatedPrice; //in pence - to store calc'd result
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -41,29 +43,34 @@ class _PostRideFormState extends State<PostRideForm> {
     Navigator.of(context).pushNamed('/singleridetest', arguments: rideData);
   }
 
-  Future calculatePrice() async {
-  GeoCode geoCode = GeoCode();
-  List<Future<Coordinates>> futures = [
-    geoCode.forwardGeocoding(address: _startPointTextController.text),
-    geoCode.forwardGeocoding(address: _endPointTextController.text),
-  ];
+  Future calculatePrice(userData) async {
+    GeoCode geoCode = GeoCode();
+    List<Future<Coordinates>> futures = [
+      geoCode.forwardGeocoding(address: _startPointTextController.text),
+      geoCode.forwardGeocoding(address: _endPointTextController.text),
+    ];
 
-  try {
-    List<Coordinates> results = await Future.wait(futures);
-    // Handle the results of all completed futures
-    final double? startLat = results[0].latitude;
-    final double? startLong = results[0].longitude; 
-    final double? endLat = results[1].latitude;
-    final double? endLong = results[1].longitude;
+    try {
+      List<Coordinates> results = await Future.wait(futures);
+      // Handle the results of all completed futures
+      final double? startLat = results[0].latitude;
+      final double? startLong = results[0].longitude; 
+      final double? endLat = results[1].latitude;
+      final double? endLong = results[1].longitude;
 
-    final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
+      final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
 
-    final dynamic geoapifyResponse = await fetchDistance(apiString);
-    print(geoapifyResponse.runtimeType);
-  } catch (error) {
-    // Handle errors if any of the futures fail
-    print('Error occurred: $error');
-  }
+      final dynamic geoapifyResponse = await fetchDistance(apiString);
+
+      //get distance and time from geoapify response
+      final dynamic distance = geoapifyResponse["features"][0]["properties"]["distance"];
+      
+      //get fuel type from api with car reg input
+
+    } catch (error) {
+      // Handle errors if any of the futures fail
+      print('Error occurred: $error');
+    }
   }
 
 
@@ -79,6 +86,7 @@ class _PostRideFormState extends State<PostRideForm> {
       _startPointTextController,
       _endPointTextController,
       _inputPriceTextController,
+      _inputRegTextController,
     ];
 
     for (final controller in controllers) {
@@ -94,6 +102,11 @@ class _PostRideFormState extends State<PostRideForm> {
 
   @override
   Widget build(BuildContext context) {
+    final userData = context.read<AuthState>().userInfo;
+    //if user has a car return form, if not present message - need to have car and licence validated to post ride
+    // print(userData.car['reg']);
+
+    if (userData.car['reg'] != null) {
     return Form(
       onChanged: _updateFormProgress, // NEW
       child: Column(
@@ -131,7 +144,14 @@ class _PostRideFormState extends State<PostRideForm> {
               decoration: const InputDecoration(hintText: 'Select end region'),
             ),
           ),
-          ElevatedButton(onPressed: () { calculatePrice(); }, child: Text('Calculate price')),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _inputRegTextController,
+              decoration: const InputDecoration(hintText: 'Enter car registration number'),
+            ),
+          ),
+          ElevatedButton(onPressed: () { calculatePrice(userData); }, child: Text('Calculate price')),
           Text('Select your date below'),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -198,6 +218,21 @@ class _PostRideFormState extends State<PostRideForm> {
         ],
       ),
     );
+
+    } else {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+         title: const Text('jumpIn')
+      ),
+      body: const Center(
+        child: Text(
+        'You need to have a car to post a ride.',
+        style: TextStyle(fontSize: 16.0),
+        ),
+      ),
+    );
+    }
   }
 }
 //DROP DOWN BUTTO
