@@ -1,3 +1,4 @@
+import './login_page.dart';
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
 import 'profile_page.dart';
@@ -5,9 +6,10 @@ import './homepage.dart';
 import "post_ride_page.dart";
 import "./test_page.dart";
 import './all_rides.dart';
-import "./all_users.dart";
 import './single_ride.dart';
 import 'package:google_fonts/google_fonts.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 
 void main() {
@@ -19,7 +21,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthState()),
+        // other providers
+      ],
+      builder: (context, child) => MaterialApp(
       title: 'jumpIn',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),
@@ -37,16 +44,23 @@ class MyApp extends StatelessWidget {
           displaySmall: GoogleFonts.pacifico(),
         )
       ),
-      home: const MyHomePage(title: 'jumpIn'),
+      home: const MyHomePage(title:"jumpIn"),
+      // Consumer<AuthState>(builder: (context, authState, _) {
+        // return authState.isAuthorized ?
+              // const MyHomePage(title:"jumpIn"),
+              // :
+              // const LoginPage();
+      // }),
       routes: {
         "/signup" : (context) => const SignUpPage(),
+        "/login" : (context) => const LoginPage(),
         '/profile': (context) => const ProfileScreen(),
         "/postride" : (context) => const PostRidePage(),
         "/test": (context) => const TestPage(),
         "/allrides": (context) => const GetRide(),
-        "/allusers": (context) => const GetUser(),
         '/singleridetest': (context) => const SingleRide() 
         }
-    );
+    )
+   );
   }
 } 

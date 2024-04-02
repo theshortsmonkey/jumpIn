@@ -26,7 +26,7 @@ const userSchema = new Schema({
     },
     identity_verification_status: {type: Boolean, default: false},
     driver_verification_status: {type: Boolean, default: false},
-    license_expiry_date: {type: String, default: ''},
+    licence_expiry_date: {type: String, default: ''},
     reports: [report]
 })
 

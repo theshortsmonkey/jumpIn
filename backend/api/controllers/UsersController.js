@@ -96,9 +96,10 @@ module.exports = {
         .collection("images.files")
         .findOne({ metadata: { username: req.params.username } });
 
-      const bucket = new mongo.GridFSBucket(db, { bucketName: "images" });
-      bucket.delete(findImage._id);
-      return res.status(204);
+      const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
+      bucket.delete(findImage._id)
+      return res.status(204).send()
+
     } catch (error) {
       return res.badRequest(error);
     }

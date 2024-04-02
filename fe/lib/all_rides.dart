@@ -17,7 +17,6 @@ class _GetRideState extends State<GetRide>{
   void initState() {
     super.initState();
     futureRides = fetchRides();
-    
   }
 
   @override

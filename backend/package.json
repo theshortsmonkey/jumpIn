@@ -11,7 +11,6 @@
     "sails-hook-orm": "^4.0.0",
     "sails-hook-sockets": "^3.0.0",
     "sails-mongo": "^2.1.0",
-    "sails-postgresql": "^5.0.1",
     "skipper": "^0.9.4",
     "skipper-disk": "^0.5.12"
   },
@@ -26,7 +25,8 @@
     "seed": "node ../db/seedLocalTestDb.js",
     "test": "node ./node_modules/mocha/bin/mocha test/lifecycle.test.js test/integration/**/*.test.js",
     "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
-    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo",
+    "seed-local": "cd .. && node ./db/seedLocalTestDb.js"
   },
   "main": "app.js",
   "repository": {
