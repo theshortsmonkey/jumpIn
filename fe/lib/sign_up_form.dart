@@ -1,5 +1,6 @@
+import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
-import 'classes/post_user_class.dart';
+import 'classes/get_user_class.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -9,25 +10,29 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController(); //record text inputs
+  final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+  final _bioController = TextEditingController();
+
 
   double _formProgress = 0;
 
   void _showWelcomeScreen() {
-    final userData = UserData(
+    final userData = User(
       firstName: _firstNameTextController.text,
       lastName: _lastNameTextController.text,
       username: _usernameTextController.text,
       email: _emailTextController.text,
       password: _passwordTextController.text,
       phoneNumber: _phoneNumberController.text,
+      bio: _bioController.text,
     );
-    Navigator.of(context).pushNamed('/profile', arguments: userData);
+    postUser(userData);
+    // Navigator.of(context).pushNamed('/profile', arguments: userData);
   }
 
   void _updateFormProgress() {
@@ -39,6 +44,7 @@ class _SignUpFormState extends State<SignUpForm> {
       _usernameTextController,
       _emailTextController,
       _phoneNumberController,
+      _bioController
     ];
 
     for (final controller in controllers) {
@@ -61,6 +67,13 @@ class _SignUpFormState extends State<SignUpForm> {
         children: [
           AnimatedProgressIndicator(value: _formProgress), 
           Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _usernameTextController,
+              decoration: const InputDecoration(hintText: 'Username'),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
@@ -92,15 +105,15 @@ class _SignUpFormState extends State<SignUpForm> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _usernameTextController,
-              decoration: const InputDecoration(hintText: 'Username'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
               controller: _passwordTextController,
               decoration: const InputDecoration(hintText: 'Password'),
+            ),
+          ),
+            Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _bioController,
+              decoration: const InputDecoration(hintText: 'Bio'),
             ),
           ),
           TextButton(

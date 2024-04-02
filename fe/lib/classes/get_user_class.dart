@@ -1,3 +1,4 @@
+
 class User {
   final String? id;
   final String username;
@@ -7,8 +8,10 @@ class User {
   final String? phoneNumber;
   final String? bio;
   final bool identity_verification_status;
-  final bool? driver_verification_status;
+  final bool driver_verification_status;
   final dynamic car;
+  final String? password;
+  final dynamic reports;
   
   const User ({
   this.id,
@@ -19,8 +22,10 @@ class User {
   this.phoneNumber,
   this.bio,
   this.identity_verification_status = false,
-  this.driver_verification_status,
-  this.car
+  this.driver_verification_status = false,
+  this.car,
+  this.password,
+  this.reports
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -35,9 +40,26 @@ class User {
       identity_verification_status: json['identity_verification_status'] as bool,
       driver_verification_status: json['identity_verification_status'] as bool,
       car: json['car'] as dynamic,
-    );
+      reports : json["reports"] as dynamic
+      );
   }
   static List<User> fromJsonList(List<Map<String, dynamic>> jsonList) {
     return jsonList.map<User>((json) => User.fromJson(json)).toList();
   }
+
+
+Map<String, dynamic> toJson() => {
+        // 'id': id,
+        "username" : username,
+        "firstName": firstName,
+        "lastName" : lastName,
+        'email': email,
+        "phoneNumber" : phoneNumber,
+        "bio": bio,
+        "password": password,
+        "identity_verification_status" : identity_verification_status,
+        "driver_verification_status" : driver_verification_status,
+        // "car" : car,
+        // "reports" : reports,
+      };
 }

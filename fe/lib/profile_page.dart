@@ -12,6 +12,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = context.read<AuthState>().userInfo;
+    final imgUrl = "http://localhost:1337/users/${userData.username}/image";
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -33,9 +34,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              const CircleAvatar(
+              new CircleAvatar(
                 radius: 70,
-                backgroundImage: NetworkImage('http://localhost:1337/users/testUSername4/image'),
+                backgroundImage: NetworkImage(imgUrl),
               ),
               const SizedBox(height: 20),
               itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
@@ -50,7 +51,6 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
               userData.identity_verification_status ? 
               itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
-              //userData.licence_expiry_date
               :
               SizedBox(
                 width: double.infinity,
