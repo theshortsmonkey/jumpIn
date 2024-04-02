@@ -1,5 +1,6 @@
 import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'classes/get_user_class.dart';
 import 'package:email_validator/email_validator.dart';
 import "./auth_provider.dart";
@@ -20,8 +21,12 @@ class _SignUpFormState extends State<SignUpForm> {
   final _emailTextController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _bioController = TextEditingController();
-
-
+  
+  bool _isEmailValid = true;
+  bool _isPhoneNumberValid = true;
+  bool _isUserNameValid = true;
+  bool _isPasswordValid = true;
+  bool _isPasswordObscured = true;
   double _formProgress = 0;
 
   void _showWelcomeScreen() async {
@@ -64,6 +69,11 @@ class _SignUpFormState extends State<SignUpForm> {
       _formProgress = progress;
     });
   }
+  void _setIsPasswordObscured() {
+    setState(() {
+      _isPasswordObscured = !_isPasswordObscured;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +88,17 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _usernameTextController,
-              decoration: const InputDecoration(hintText: 'Username'),
+              decoration: InputDecoration(
+                hintText: 'Username',
+                errorMaxLines: 3,
+                errorText: _isUserNameValid ? null : 'Enter valid username: letters, numbers or underscore. 5-20 characters'
+                ),
+                onChanged: (value) {
+                  final RegExp regex = RegExp(r'^[a-zA-Z0-9_]{5,20}$');
+                  setState(() {
+                    _isUserNameValid = regex.hasMatch(value);
+                  });
+                },
             ),
           ),
           Padding(
@@ -99,34 +119,53 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _emailTextController,
-              decoration: const InputDecoration(hintText: 'Email: joebloggs@example.com'),
-              validator: (value) {
-                dynamic email;
-                if (value == null || value.isEmpty) {
-                  email = '';
-                } else {
-                  email = value;
-                }
-                final bool isEmail = EmailValidator.validate(email);
-                if (!isEmail) {
-                  return 'Please enter a valid email address';
-                  }
-              return null; // Return null if the input is valid
-              },
+              decoration: InputDecoration(
+                hintText: 'Email: joebloggs@example.com',
+                errorText: _isEmailValid ? null : 'enter a valid email address', 
+                ),
+            onChanged: (value) {
+              setState(() {
+                _isEmailValid = EmailValidator.validate(value);
+              });
+            }
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _phoneNumberController,
-              decoration: const InputDecoration(hintText: 'Phone Number'),
+              decoration: InputDecoration(
+                hintText: 'Phone Number',
+                errorText: _isPhoneNumberValid ? null : 'enter valid UK phone number'
+                ),
+              onChanged: (value) {
+                final RegExp regex = RegExp(r'^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$');
+                setState(() {
+                  _isPhoneNumberValid = regex.hasMatch(value);
+                });
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
+              obscureText: _isPasswordObscured,
               controller: _passwordTextController,
-              decoration: const InputDecoration(hintText: 'Password'),
+              decoration: InputDecoration(
+                hintText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(_isPasswordObscured ? Icons.visibility : Icons.visibility_off),
+                  onPressed:_setIsPasswordObscured,
+                ),
+                errorMaxLines: 3,
+                errorText: _isPasswordValid ? null : "Enter valid password: At least one lowercase letter, one uppercase letter, one digit, one special character '`@!%*?&', at least 8 characters"
+                ),
+                onChanged: (value) {
+                  final RegExp regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+                  setState(() {
+                    _isPasswordValid = regex.hasMatch(value);
+                  });
+                }
             ),
           ),
             Padding(
@@ -222,5 +261,6 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
         backgroundColor: _colorAnimation.value?.withOpacity(0.4),
       ),
     );
+
   }
 }
