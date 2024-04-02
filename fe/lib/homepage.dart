@@ -14,6 +14,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
 
+  void _setDefaultUser() async {
+    final futureUser = fetchUserByUsername('testUSername1');
+    futureUser.then((user) {
+    context.read<AuthState>().setUser(user);
+    });
+  }
   void _showSignUpScreen() {
   Navigator.of(context).pushNamed('/signup');
   }
@@ -23,12 +29,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showRidesPage() {
   Navigator.of(context).pushNamed('/allrides');
   }
-  void _showProfilePage() async {
-    final futureUser = fetchUserByUsername('testUSername1');
-    futureUser.then((user) {
-      context.read<AuthState>().setUser(user);
-      Navigator.of(context).pushNamed('/profile');
-    });
+  void _showProfilePage() {
+  Navigator.of(context).pushNamed('/profile');
   }
 
   @override
@@ -41,6 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: Text(widget.title),
                 actions: [
+                  IconButton(
+                icon : const Icon(Icons.login_outlined),
+                onPressed:_setDefaultUser ,
+                ),
                   IconButton(
                 icon : const Icon(Icons.verified_user_rounded),
                 onPressed:_showProfilePage ,

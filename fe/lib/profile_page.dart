@@ -12,7 +12,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = context.read<AuthState>().userInfo;
-    // getUserImage(userData.username);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -20,64 +19,66 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(15),
-                  ),
-                  child: const Text('Edit Profile')
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: const Text('Edit Profile')
+                ),
               ),
-            ),
-            const SizedBox(height: 40),
-            const CircleAvatar(
-              radius: 70,
-              backgroundImage: NetworkImage('http://localhost:1337/users/testUSername4/image'),
-            ),
-            const SizedBox(height: 20),
-            itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
-            const SizedBox(height: 10),
-            itemProfile('Username', '${userData.username}', CupertinoIcons.location),
-            const SizedBox(height: 10),
-            itemProfile('Email', '${userData.email}', CupertinoIcons.mail),
-            const SizedBox(height: 20,),
-            itemProfile('Phone', '${userData.phoneNumber}', CupertinoIcons.phone),
-            const SizedBox(height: 20,),
-            itemProfile('Bio', '${userData.bio}', CupertinoIcons.profile_circled),
-            const SizedBox(height: 20),
-            userData.identity_verification_status ? 
-            itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
-            //userData.licence_expiry_date
-            :
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(15),
-                  ),
-                  child: const Text('Validate Licence')
+              const SizedBox(height: 40),
+              const CircleAvatar(
+                radius: 70,
+                backgroundImage: NetworkImage('http://localhost:1337/users/testUSername4/image'),
               ),
-            ),
-            const SizedBox(height: 20,),
-            userData.car["tax_due_date"].isNotEmpty ?
-            carBox(userData.car)
-                        :
-                        SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(15),
-                  ),
-                  child: const Text('Validate vehicle')
+              const SizedBox(height: 20),
+              itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
+              const SizedBox(height: 10),
+              itemProfile('Username', '${userData.username}', CupertinoIcons.location),
+              const SizedBox(height: 10),
+              itemProfile('Email', '${userData.email}', CupertinoIcons.mail),
+              const SizedBox(height: 20,),
+              itemProfile('Phone', '${userData.phoneNumber}', CupertinoIcons.phone),
+              const SizedBox(height: 20,),
+              itemProfile('Bio', '${userData.bio}', CupertinoIcons.profile_circled),
+              const SizedBox(height: 20),
+              userData.identity_verification_status ? 
+              itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
+              //userData.licence_expiry_date
+              :
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: const Text('Validate Licence')
+                ),
               ),
+              const SizedBox(height: 20,),
+              userData.car["tax_due_date"].isNotEmpty ?
+              carBox(userData.car)
+                          :
+                          SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: const Text('Validate vehicle')
+                ),
+          )
+          ]
+          ),
         )
-        ]
-        ),
       ),
     );
   }
