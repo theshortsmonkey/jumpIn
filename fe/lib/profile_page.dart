@@ -1,3 +1,5 @@
+import 'dart:html';
+import './login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'classes/get_user_class.dart';
@@ -13,7 +15,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userData = context.read<AuthState>().userInfo;
     final imgUrl = "http://localhost:1337/users/${userData.username}/image";
-    return Scaffold(
+    return context.read<AuthState>().isAuthorized
+    ? Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: const Text('jumpIn')
@@ -63,7 +66,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20,),
-              userData.car["tax_due_date"].isNotEmpty ?
+              // userData.car["tax_due_date"].isNotEmpty
+              userData.car != null ?
               carBox(userData.car)
                           :
                           SizedBox(
@@ -80,7 +84,8 @@ class ProfileScreen extends StatelessWidget {
           ),
         )
       ),
-    );
+    )
+    : const LoginPage();
   }
 
   carBox(car) {

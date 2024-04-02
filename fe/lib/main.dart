@@ -45,11 +45,10 @@ class MyApp extends StatelessWidget {
         )
       ),
       home: const MyHomePage(title:"jumpIn"),
-      // Consumer<AuthState>(builder: (context, authState, _) {
-        // return authState.isAuthorized ?
-              // const MyHomePage(title:"jumpIn"),
-              // :
-              // const LoginPage();
+      // home: Consumer<AuthState>(builder: (context, authState, _) {
+      //   return authState.isAuthorized
+      //         ? const MyHomePage(title:"jumpIn")
+      //         : const LoginPage();
       // }),
       routes: {
         "/signup" : (context) => const SignUpPage(),

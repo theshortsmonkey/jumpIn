@@ -18,10 +18,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final futureUser = fetchUserByUsername('testUSername1');
     futureUser.then((user) {
     context.read<AuthState>().setUser(user);
+      Navigator.of(context).pushNamed('/profile');
     });
   }
   void _showSignUpScreen() {
   Navigator.of(context).pushNamed('/signup');
+  }
+  void _showLoginPage() {
+  Navigator.of(context).pushNamed('/login');
   }
   void _showPostRideScreen() {
   Navigator.of(context).pushNamed('/postride');
@@ -57,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 IconButton(
                 icon : const Icon(Icons.login),
-                onPressed:_showSignUpScreen ,
+                onPressed:_showLoginPage ,
                 ),
                 IconButton(
                 icon : const Icon(Icons.report),

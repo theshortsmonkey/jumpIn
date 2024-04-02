@@ -1,6 +1,9 @@
 import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_user_class.dart';
+import 'package:email_validator/email_validator.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -21,7 +24,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   double _formProgress = 0;
 
-  void _showWelcomeScreen() {
+  void _showWelcomeScreen() async {
     final userData = User(
       firstName: _firstNameTextController.text,
       lastName: _lastNameTextController.text,
@@ -31,8 +34,12 @@ class _SignUpFormState extends State<SignUpForm> {
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
     );
-    postUser(userData);
-    // Navigator.of(context).pushNamed('/profile', arguments: userData);
+    final postedUser = await postUser(userData);
+    final futureUser = fetchUserByUsername(postedUser.username);
+    futureUser.then((user) {
+      context.read<AuthState>().setUser(user);
+      Navigator.of(context).pushNamed('/');
+    });
   }
 
   void _updateFormProgress() {
@@ -93,6 +100,19 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _emailTextController,
               decoration: const InputDecoration(hintText: 'Email: joebloggs@example.com'),
+              validator: (value) {
+                dynamic email;
+                if (value == null || value.isEmpty) {
+                  email = '';
+                } else {
+                  email = value;
+                }
+                final bool isEmail = EmailValidator.validate(email);
+                if (!isEmail) {
+                  return 'Please enter a valid email address';
+                  }
+              return null; // Return null if the input is valid
+              },
             ),
           ),
           Padding(

@@ -39,6 +39,7 @@ class User {
       bio: json['bio'] as String,
       identity_verification_status: json['identity_verification_status'] as bool,
       driver_verification_status: json['identity_verification_status'] as bool,
+      password: json['password'] as String,
       car: json['car'] as dynamic,
       reports : json["reports"] as dynamic
       );
@@ -57,8 +58,8 @@ Map<String, dynamic> toJson() => {
         "phoneNumber" : phoneNumber,
         "bio": bio,
         "password": password,
-        "identity_verification_status" : identity_verification_status,
-        "driver_verification_status" : driver_verification_status,
+        // "identity_verification_status" : identity_verification_status,
+        // "driver_verification_status" : driver_verification_status,
         // "car" : car,
         // "reports" : reports,
       };

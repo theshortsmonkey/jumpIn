@@ -44,7 +44,6 @@ Future<List<User>> fetchUsers() async {
 Future<User> fetchUserByUsername(username) async {
   final response = await httpEnhanced.get('/users/$username');
   if (response.isNotEmpty) {
-    print(response);
    var user = User.fromJson(response as Map<String, dynamic>);
       return user;
   } else {
@@ -54,10 +53,8 @@ Future<User> fetchUserByUsername(username) async {
 
 Future<User> postUser(user) async {
   String json = jsonEncode(user);
-  // print(json);
   final response = await http.post(Uri.parse('http://localhost:1337/users'), headers: {"Content-Type": "application/json"},body: json);
   if(response.statusCode == 200) {
-    // print(jsonDecode(response.body));
    var user = User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     return user;
   }
