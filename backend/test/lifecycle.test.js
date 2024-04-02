@@ -1,8 +1,8 @@
-var sails = require('sails');
-
+const sails = require('sails');
+//const seed = require("../data/seedLocalTestDb");
 // Before running any tests...
 before(function(done) {
-
+  //seed()
   // Increase the Mocha timeout so that Sails has enough time to lift, even if you have a bunch of assets.
   this.timeout(5000);
 
