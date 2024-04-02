@@ -4,7 +4,7 @@ import 'dart:async';
 import "./classes/get_user_class.dart";
 
 EnhancedHttp http = EnhancedHttp(baseURL: 'http://localhost:1337');
-
+EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
 //
 Future<List<Ride>> fetchRides() async {
   final response = await http.get('/rides');
@@ -20,9 +20,10 @@ Future<List<Ride>> fetchRides() async {
   }
 }
 
-Future<Ride> fetchRideById(id) async {
-  final response = await http.get('/rides/${id}');
+Future<Ride> fetchRideById() async {
+  final response = await http.get('/rides/660b0b6dbc53dd2340ceeda0'); //hardcoded 
   if (response.isNotEmpty) {
+    print(response);
       // Ensure each item is correctly interpreted as Map<String, dynamic> 
       // NB Map = object, so Map<String, dynamic> means object key-value pairs of form {string(s): any-value-type}
       return Ride.fromJson(response as Map<String, dynamic>);
@@ -53,6 +54,13 @@ Future<User> fetchUserByUsername(username) async {
   }
 }
 
+Future fetchDistance(waypoints) async {
+  final response = await httpGeoapify.get('?waypoints=${waypoints}&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
+  print(response["features"][0]["properties"]["distance"]);
+  return response;
+}
+
+
 // Future<User> fetchImageByUsername(username) async {
 //   final response = await http.get('/users/${username}/image');
 //   if (response.isNotEmpty) {
@@ -62,8 +70,6 @@ Future<User> fetchUserByUsername(username) async {
 //     throw Exception('No image found');
 //   }
 // }
-
-
 
 
 

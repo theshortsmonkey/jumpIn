@@ -9,7 +9,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController();
+  final _firstNameTextController = TextEditingController(); //record text inputs
   final _lastNameTextController = TextEditingController();
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
