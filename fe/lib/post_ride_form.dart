@@ -4,6 +4,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:geocode/geocode.dart';
 import 'dart:async';
 import 'api.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
+
 
 class PostRideForm extends StatefulWidget {
   const PostRideForm({super.key});
@@ -39,32 +42,36 @@ class _PostRideFormState extends State<PostRideForm> {
   }
 
   Future calculatePrice() async {
-    GeoCode geoCode = GeoCode();
-    List<Future<Coordinates>> futures = [
-      geoCode.forwardGeocoding(address: _startPointTextController.text),
-      geoCode.forwardGeocoding(address: _endPointTextController.text),
-    ];
+  GeoCode geoCode = GeoCode();
+  List<Future<Coordinates>> futures = [
+    geoCode.forwardGeocoding(address: _startPointTextController.text),
+    geoCode.forwardGeocoding(address: _endPointTextController.text),
+  ];
 
-    Future.wait(futures).then((List<Coordinates> results) {
+  try {
+    List<Coordinates> results = await Future.wait(futures);
     // Handle the results of all completed futures
-      final double? startLat = results[0].latitude;
-      final double? startLong = results[0].longitude; 
-      final double? endLat = results[1].latitude;
-      final double? endLong = results[1].longitude;
+    final double? startLat = results[0].latitude;
+    final double? startLong = results[0].longitude; 
+    final double? endLat = results[1].latitude;
+    final double? endLong = results[1].longitude;
 
-      final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
+    final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
 
-      final dynamic geoapifyResponse = fetchDistance(apiString);
-      print(geoapifyResponse.runtimeType);
-
-    }).catchError((error) {
+    final dynamic geoapifyResponse = await fetchDistance(apiString);
+    print(geoapifyResponse.runtimeType);
+  } catch (error) {
     // Handle errors if any of the futures fail
-      print('Error occurred: $error');
-    });
+    print('Error occurred: $error');
+  }
+  }
+
+
+
     // setState((){
     //   _calculatedPrice = price;
     // });
-  }
+  
 
   void _updateFormProgress() {
     var progress = 0.0;

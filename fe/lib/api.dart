@@ -1,10 +1,14 @@
 import 'package:enhanced_http/enhanced_http.dart';
+import 'package:flutter/material.dart';
 import 'classes/get_ride_class.dart';
 import 'dart:async';
 import "./classes/get_user_class.dart";
+import "./auth_provider.dart";
 
 EnhancedHttp http = EnhancedHttp(baseURL: 'http://localhost:1337');
 EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
+EnhancedHttp httpVES = EnhancedHttp(baseURL: 'https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles');
+
 //
 Future<List<Ride>> fetchRides() async {
   final response = await http.get('/rides');
@@ -58,6 +62,13 @@ Future fetchDistance(waypoints) async {
   final response = await httpGeoapify.get('?waypoints=${waypoints}&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
   print(response["features"][0]["properties"]["distance"]);
   return response;
+}
+
+Future fetchCarDetails() async {
+
+  //just using co2 and fuel type 
+  final respones = await 
+  return response
 }
 
 
