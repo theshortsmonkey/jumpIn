@@ -21,7 +21,7 @@ Future<List<Ride>> fetchRides() async {
 }
 
 Future<Ride> fetchRideById() async {
-  final response = await http.get('/rides/6604245dad2e07545e064e81'); //hardcoded 
+  final response = await http.get('/rides/660b0b6dbc53dd2340ceeda0'); //hardcoded 
   if (response.isNotEmpty) {
     print(response);
       // Ensure each item is correctly interpreted as Map<String, dynamic> 

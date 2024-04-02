@@ -2,54 +2,51 @@ import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
 import './classes/get_ride_class.dart';
 
-//change profile page to single ride page in same template
+//NEEDS TO BE FIXED - NOT LOADING CURRENTLY
 
 class SingleRide extends StatefulWidget {
+  //final String rideId;
   const SingleRide({super.key});
 
   @override
   State<SingleRide> createState() => _SingleRideState();
- } 
+}
 
- class _SingleRideState extends State<SingleRide>{
-   late Future<Ride> futureRide;
-   late String rideId;
+class _SingleRideState extends State<SingleRide> {
+  late Future<Ride> futureRide;
+  late String rideId;
 
   @override
-    void initState() {
-      super.initState();
-      //rideId = ModalRoute.of(context)!.settings.arguments as String; //think this is causing the err before initstate completes
-
-      futureRide = fetchRideById();
-      print(futureRide);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (rideId.isEmpty) {
+      rideId = ModalRoute.of(context)!.settings.arguments as String;
+      print(rideId);
+      futureRide = fetchRideById(); //pass rideId
     }
-  
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-         title: const Text('jumpIn')
-      ),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('jumpIn')),
       body: Center(
         child: FutureBuilder<Ride>(
-          future: futureRide,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-
-              // Use ListView.builder to loop through snapshot.data and render a card for each ride
-              return Text('${snapshot.data?.to}');
-              
-            } else {
-              return Text('No data');
-            }
-          }
-        ),
+            future: futureRide,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                // Use ListView.builder to loop through snapshot.data and render a card for each ride
+                return Text('${snapshot.data?.to}');
+              } else {
+                return Text('No data');
+              }
+            }),
       ),
     );
   }
@@ -64,10 +61,8 @@ class SingleRide extends StatefulWidget {
                 offset: Offset(0, 5),
                 color: Colors.deepOrange.withOpacity(.2),
                 spreadRadius: 2,
-                blurRadius: 10
-            )
-          ]
-      ),
+                blurRadius: 10)
+          ]),
       child: ListTile(
         title: Text(title),
         subtitle: Text(subtitle),
@@ -76,8 +71,5 @@ class SingleRide extends StatefulWidget {
         tileColor: Colors.white,
       ),
     );
-
   }
 }
-
-
