@@ -44,11 +44,33 @@ Future<List<User>> fetchUsers() async {
   }
 }
 
+Future<User> fetchUserByUsername(username) async {
+  final response = await http.get('/users?username=${username}');
+  if (response.isNotEmpty) {
+   var user = User.fromJson(response[0] as Map<String, dynamic>);
+      return user;
+  } else {
+    throw Exception('No users found');
+  }
+}
+
 Future fetchDistance(waypoints) async {
   final response = await httpGeoapify.get('?waypoints=${waypoints}&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
   print(response["features"][0]["properties"]["distance"]);
   return response;
 }
+
+
+// Future<User> fetchImageByUsername(username) async {
+//   final response = await http.get('/users/${username}/image');
+//   if (response.isNotEmpty) {
+//    var _profileImage = Image.memory(response.bodyBytes).image
+//    return _profileImage
+//   } else {
+//     throw Exception('No image found');
+//   }
+// }
+
 
 
 

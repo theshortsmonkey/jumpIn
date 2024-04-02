@@ -9,8 +9,45 @@ const { mongo } = require('mongoose')
 const { createWriteStream, createReadStream, unlink } = require('fs')
 
 module.exports = {
-  imageDownload: async (req, res) => {
+  deleteUser: async (req, res) => {
     try {
+      const findUser = await Users.findOne({username: req.params.username});
+      if (findUser){
+        await Users.destroy({username: req.params.username});
+        return res.ok();
+      }else{
+        res.status(404);
+        return res.json({
+          message: 'Username not found'
+        });
+      }
+    } catch (error) {
+        return res.badRequest(error);
+    }
+  },
+  patchUser: async (req, res) => {
+    try {
+      const updatedUser = await Users.update({username: req.params.username})
+        .set(req.body)
+        .fetch();
+      return res.ok(updatedUser);
+    } catch (error) {
+        return res.badRequest(error);
+    }
+  },
+  getUser: async (req, res) => {
+    try {
+      const findUser = await Users.findOne({username: req.params.username});
+      if (findUser)
+        return res.ok(findUser);
+      else
+        return res.status(404);
+    } catch (error) {
+        return res.badRequest(error);
+    }
+  },
+  imageDownload: async (req, res) => {
+      try {
       const db = Users.getDatastore().manager
       const findImage = await db
         .collection('images.files')
@@ -22,14 +59,8 @@ module.exports = {
         createReadStream(filePath).pipe(res)
       } else {
         const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
-        const filePath = path + '/.tmp/downloads/' + findImage.filename
         bucket
-          .openDownloadStream(findImage._id)
-          .pipe(createWriteStream(filePath))
-          .on('close', () => {
-            createReadStream(filePath).pipe(res)
-            unlink(filePath, () => {})
-          })
+          .openDownloadStream(findImage._id).pipe(res)
       }
     } catch (error) {
       return res.badRequest(error)
@@ -64,7 +95,7 @@ module.exports = {
 
       const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
       bucket.delete(findImage._id)
-      return res.status(204)
+      return res.status(204).send()
     } catch (error) {
       return res.badRequest(error)
     }

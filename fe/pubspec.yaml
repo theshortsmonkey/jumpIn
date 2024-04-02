@@ -40,6 +40,7 @@ dependencies:
   google_fonts: ^6.2.1
   geocoding: ^3.0.0
   geocode: ^1.0.3
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
