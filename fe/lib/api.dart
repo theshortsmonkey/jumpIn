@@ -43,6 +43,28 @@ Future<List<User>> fetchUsers() async {
   }
 }
 
+Future<User> fetchUserByUsername(username) async {
+  final response = await http.get('/users?username=${username}');
+  if (response.isNotEmpty) {
+   var user = User.fromJson(response[0] as Map<String, dynamic>);
+      return user;
+  } else {
+    throw Exception('No users found');
+  }
+}
+
+// Future<User> fetchImageByUsername(username) async {
+//   final response = await http.get('/users/${username}/image');
+//   if (response.isNotEmpty) {
+//    var _profileImage = Image.memory(response.bodyBytes).image
+//    return _profileImage
+//   } else {
+//     throw Exception('No image found');
+//   }
+// }
+
+
+
 
 
 

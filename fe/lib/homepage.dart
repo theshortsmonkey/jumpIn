@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import './api.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -11,6 +14,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
 
+  void _setDefaultUser() async {
+    final futureUser = fetchUserByUsername('testUSername1');
+    futureUser.then((user) {
+    context.read<AuthState>().setUser(user);
+    });
+  }
   void _showSignUpScreen() {
   Navigator.of(context).pushNamed('/signup');
   }
@@ -20,8 +29,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _showRidesPage() {
   Navigator.of(context).pushNamed('/allrides');
   }
-  void _showUsersPage() {
-  Navigator.of(context).pushNamed('/allusers');
+  void _showProfilePage() {
+  Navigator.of(context).pushNamed('/profile');
   }
 
   @override
@@ -35,8 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
          title: Text(widget.title),
                 actions: [
                   IconButton(
+                icon : const Icon(Icons.login_outlined),
+                onPressed:_setDefaultUser ,
+                ),
+                  IconButton(
                 icon : const Icon(Icons.verified_user_rounded),
-                onPressed:_showUsersPage ,//report page
+                onPressed:_showProfilePage ,
                 ),
                 IconButton(
                 icon : const Icon(Icons.car_rental),
@@ -48,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 IconButton(
                 icon : const Icon(Icons.report),
-                onPressed:_showSignUpScreen ,//report page
+                onPressed:_showSignUpScreen ,
                 )
                 
       ],
