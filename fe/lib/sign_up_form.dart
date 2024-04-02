@@ -1,27 +1,44 @@
 import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'classes/get_user_class.dart';
 import 'package:email_validator/email_validator.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  final String submitType;
+  const SignUpForm({super.key, required this.submitType});
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController();
-  final _lastNameTextController = TextEditingController();
-  final _usernameTextController = TextEditingController();
-  final _passwordTextController = TextEditingController();
-  final _emailTextController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
-  final _bioController = TextEditingController();
-  
+  var _firstNameTextController = TextEditingController(text: '');
+  var _lastNameTextController = TextEditingController(text: '');
+  var _usernameTextController = TextEditingController(text: '');
+  var _passwordTextController = TextEditingController(text: '');
+  var _emailTextController = TextEditingController(text: '');
+  var _phoneNumberController = TextEditingController(text: '');
+  var _bioController = TextEditingController(text: '');
+  @override
+  void initState () {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    final provider = Provider.of<AuthState>(context, listen:false);
+    final currUser = provider.userInfo;
+    _firstNameTextController = TextEditingController(text: currUser.firstName);
+    _lastNameTextController = TextEditingController(text: currUser.lastName);
+    _usernameTextController = TextEditingController(text: currUser.username);
+    _passwordTextController = TextEditingController(text: currUser.password);
+    _emailTextController = TextEditingController(text: currUser.email);
+    _phoneNumberController = TextEditingController(text: currUser.phoneNumber);
+    _bioController = TextEditingController(text: currUser.bio);
+    setState(() {});
+    });
+  }
+
+
   bool _isEmailValid = true;
   bool _isPhoneNumberValid = true;
   bool _isUserNameValid = true;
@@ -39,12 +56,21 @@ class _SignUpFormState extends State<SignUpForm> {
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
     );
+    if (widget.submitType == 'post') {
     final postedUser = await postUser(userData);
     final futureUser = fetchUserByUsername(postedUser.username);
     futureUser.then((user) {
       context.read<AuthState>().setUser(user);
       Navigator.of(context).pushNamed('/');
     });
+    } else {
+      final patchedUser = await patchUser(userData);
+      final futureUser = fetchUserByUsername(patchedUser.username);
+      futureUser.then((user) {
+        context.read<AuthState>().setUser(user);
+        Navigator.of(context).pushNamed('/profile');
+      });      
+    }
   }
 
   void _updateFormProgress() {
@@ -77,19 +103,22 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    String titleText;
+    widget.submitType == 'post' 
+    ? titleText = 'Sign Up'
+    : titleText = 'Edit Profile';
     return Form(
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedProgressIndicator(value: _formProgress), 
-          Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _usernameTextController,
               decoration: InputDecoration(
-                hintText: 'Username',
+                labelText: 'Username',
                 errorMaxLines: 3,
                 errorText: _isUserNameValid ? null : 'Enter valid username: letters, numbers or underscore. 5-20 characters'
                 ),
@@ -105,14 +134,14 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _firstNameTextController,
-              decoration: const InputDecoration(hintText: 'First name'),
+              decoration: const InputDecoration(labelText: 'First name'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _lastNameTextController,
-              decoration: const InputDecoration(hintText: 'Last name'),
+              decoration: const InputDecoration(labelText: 'Last name'),
             ),
           ),
           Padding(
@@ -120,7 +149,7 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _emailTextController,
               decoration: InputDecoration(
-                hintText: 'Email: joebloggs@example.com',
+                labelText: 'Email',
                 errorText: _isEmailValid ? null : 'enter a valid email address', 
                 ),
             onChanged: (value) {
@@ -135,7 +164,7 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _phoneNumberController,
               decoration: InputDecoration(
-                hintText: 'Phone Number',
+                labelText: 'Phone Number',
                 errorText: _isPhoneNumberValid ? null : 'enter valid UK phone number'
                 ),
               onChanged: (value) {
@@ -152,7 +181,7 @@ class _SignUpFormState extends State<SignUpForm> {
               obscureText: _isPasswordObscured,
               controller: _passwordTextController,
               decoration: InputDecoration(
-                hintText: 'Password',
+                labelText: 'Password',
                 suffixIcon: IconButton(
                   icon: Icon(_isPasswordObscured ? Icons.visibility : Icons.visibility_off),
                   onPressed:_setIsPasswordObscured,
@@ -172,7 +201,7 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _bioController,
-              decoration: const InputDecoration(hintText: 'Bio'),
+              decoration: const InputDecoration(labelText: 'Bio'),
             ),
           ),
           TextButton(
@@ -190,7 +219,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             onPressed:
             _formProgress > 0.99 ? _showWelcomeScreen : null,
-            child: const Text('Sign up'),
+            child: Text(titleText),
           ),
         ],
       ),

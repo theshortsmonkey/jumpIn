@@ -63,6 +63,23 @@ Future<User> postUser(user) async {
   }
 }
 
+Future<User> patchUser(user) async {
+  String json = jsonEncode(user);
+  String uri = 'http://localhost:1337/users/${user.username}';
+  final response = await http.patch(Uri.parse(uri), headers: {"Content-Type": "application/json"},body: json);
+  if(response.statusCode == 200) {
+  //  var user = User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  //   return user;
+    List<User> users = jsonDecode(response.body).map<User>((item) {
+      return User.fromJson(item as Map<String, dynamic>);
+    }).toList();
+    return users[0];
+  }
+  else{
+  throw Exception("User not found");
+  }
+}
+
 Future fetchDistance(waypoints) async {
   final response = await httpGeoapify.get('?waypoints=$waypoints&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
   return response;

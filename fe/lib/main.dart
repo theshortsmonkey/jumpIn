@@ -1,3 +1,5 @@
+import 'package:fe/edit_profile_page.dart';
+
 import './login_page.dart';
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
@@ -57,7 +59,8 @@ class MyApp extends StatelessWidget {
         "/postride" : (context) => const PostRidePage(),
         "/test": (context) => const TestPage(),
         "/allrides": (context) => const GetRide(),
-        '/singleridetest': (context) => const SingleRide() 
+        '/singleridetest': (context) => const SingleRide(),
+        '/editprofile': (context) => const EditProfilePage()
         }
     )
    );

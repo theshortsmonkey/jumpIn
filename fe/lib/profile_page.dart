@@ -29,7 +29,9 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/editprofile');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
