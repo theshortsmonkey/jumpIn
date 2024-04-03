@@ -41,6 +41,7 @@ dependencies:
   geocoding: ^3.0.0
   geocode: ^1.0.3
   provider: ^6.1.2
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:

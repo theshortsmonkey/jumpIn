@@ -1,13 +1,16 @@
+import 'dart:convert';
 import 'package:enhanced_http/enhanced_http.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_ride_class.dart';
 import 'dart:async';
 import "./classes/get_user_class.dart";
 import "./auth_provider.dart";
+import 'package:http/http.dart' as httpRegular;
+
 
 EnhancedHttp http = EnhancedHttp(baseURL: 'http://localhost:1337');
 EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
-EnhancedHttp httpVES = EnhancedHttp(baseURL: 'https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles');
+EnhancedHttp httpFuel = EnhancedHttp(baseURL: 'https://www.bp.com');
 
 //
 Future<List<Ride>> fetchRides() async {
@@ -64,12 +67,45 @@ Future fetchDistance(waypoints) async {
   return response;
 }
 
-Future fetchCarDetails() async {
+Future fetchFuelPrice(fuelType) async {
+  final double fuelPrice;
+  final response = await httpFuel.get('/en_gb/united-kingdom/home/fuelprices/fuel_prices_data.json',
+    headers: {
+      "accept": '*/*',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
+    }
+  );
+  if(fuelType == "PETROL"){
+    fuelPrice = response["stations"][0]['prices']['E10']; //petrol price
+  } else {
+    fuelPrice = response["stations"][0]['prices']['B7']; //diesel price
+  }
 
-  //just using co2 and fuel type 
-  final respones = await 
-  return response
+  print(fuelPrice);
+  return fuelPrice;
 }
+
+Future fetchCarDetails(carReg) async {
+  try {
+    final response = await httpRegular.post(
+      Uri.parse('https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles'),
+      headers: {
+        'x-api-key': '1gZwZ4vfFN1TbScqIP7FG4ccTa8SkB95aJN9wHBs',
+        "accept": '*/*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD"
+      },
+      body: jsonEncode({'registrationNumber': carReg}),
+    ); 
+    print(json.decode(response.body));
+    return (json.decode(response.body));
+  } catch (e) {
+    throw Exception("Error fetching car details: $e");
+     // or handle the error accordingly
+  }
+}
+
 
 
 // Future<User> fetchImageByUsername(username) async {
