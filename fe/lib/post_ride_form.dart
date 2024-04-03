@@ -73,7 +73,6 @@ class _PostRideFormState extends State<PostRideForm> {
       final double? endLong = endPoint.longitude;
 
       final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
-      final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
 
       final metreDistanceFuture = fetchDistance(apiString);
 
@@ -164,7 +163,7 @@ class _PostRideFormState extends State<PostRideForm> {
       _startPointTextController,
       _endPointTextController,
       _inputPriceTextController,
-      _inputRegTextController,
+      _carRegTextController,
     ];
 
     for (final controller in controllers) {
