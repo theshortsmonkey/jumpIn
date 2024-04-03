@@ -45,6 +45,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _isPasswordValid = true;
   bool _isPasswordObscured = true;
   double _formProgress = 0;
+  bool _doesUserExist = false;
 
   void _showWelcomeScreen() async {
     final userData = User(
@@ -57,12 +58,20 @@ class _SignUpFormState extends State<SignUpForm> {
       bio: _bioController.text,
     );
     if (widget.submitType == 'post') {
+        setState(() {
+          _doesUserExist = false;
+        });
+      try {
     final postedUser = await postUser(userData);
-    final futureUser = fetchUserByUsername(postedUser.username);
-    futureUser.then((user) {
-      context.read<AuthState>().setUser(user);
-      Navigator.of(context).pushNamed('/');
-    });
+    final futureUser = await fetchUserByUsername(postedUser.username);
+      context.read<AuthState>().setUser(futureUser);
+      Navigator.of(context).pushNamed('/profile');
+      } catch (e) {
+        print(e);
+        setState(() {
+          _doesUserExist = true;
+        });
+      }
     } else {
       final patchedUser = await patchUser(userData);
       final futureUser = fetchUserByUsername(patchedUser.username);
@@ -221,6 +230,7 @@ class _SignUpFormState extends State<SignUpForm> {
             _formProgress > 0.99 ? _showWelcomeScreen : null,
             child: Text(titleText),
           ),
+        _doesUserExist ? Text('Username already exists', style: Theme.of(context).textTheme.bodyLarge) : const Text(''),
         ],
       ),
     );

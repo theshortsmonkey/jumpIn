@@ -46,9 +46,7 @@ Future<List<User>> fetchUsers() async {
 
 Future<User> fetchUserByUsername(username) async {
   try{
-  print('start');
   final response = await httpEnhanced.get('/users/$username');
-  print(response);
    var user = User.fromJson(response as Map<String, dynamic>);
       return user;
   } catch (e) {
@@ -64,7 +62,7 @@ Future<User> postUser(user) async {
     return user;
   }
   else{
-  throw Exception("User not found");
+  throw Exception(response.body);
   }
 }
 
