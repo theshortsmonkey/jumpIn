@@ -91,8 +91,6 @@ Future<User?>deleteUser(user) async {
   final response = await http.delete(uri);
 
   if(response.statusCode == 200) {
-    print("something");
-    print(response.body);
     return null;
   } else {
     throw Exception("Failed to delete user account");

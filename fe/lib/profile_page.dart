@@ -7,9 +7,44 @@ import 'package:provider/provider.dart';
 import "./auth_provider.dart";
 import './api.dart';
 
-
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen>{
+bool _isDeleted = false;
+bool _areYouSure = false;
+String _deleteButtonText ='Delete your account';
+dynamic userData;
+@override
+void initState() {
+  super.initState();
+    final provider = Provider.of<AuthState>(context, listen:false);
+    userData = provider.userInfo;
+}
+
+
+void _handleDelete () async {
+  if(_areYouSure){
+    deleteUser(userData);
+  setState(() {
+    _isDeleted = true;
+  });
+  await Future.delayed(const Duration(seconds: 5), () {
+    context.read<AuthState>().logout();
+    Navigator.of(context).pushNamed('/');
+  });
+  }else{
+  setState(() {
+  _areYouSure = true;
+  _deleteButtonText = 'Your account is going to be destroyed! Are you sure?';
+});}
+
+  
+}
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +56,21 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: const Text('jumpIn')
       ),
-      body: Padding(
+      body: 
+       _isDeleted
+       ?
+      Center(
+        child: SingleChildScrollView(
+        child: SizedBox(
+          width: 400,
+          child: Column(
+            children: [itemProfile('Account Deleted','' ,CupertinoIcons.person_badge_minus)],
+          ),
+        ),
+        ),
+      )
+       :
+      Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
@@ -41,13 +90,11 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {
-                      deleteUser(userData);
-                    },
+                    onPressed: _handleDelete,
                     style:ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
-                    child: const Text('Delete your account')
+                    child: Text(_deleteButtonText)
                 )
               ),
               const SizedBox(height: 40),
