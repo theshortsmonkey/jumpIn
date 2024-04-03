@@ -56,7 +56,9 @@ class _PostRideFormState extends State<PostRideForm> {
       final startPoint = results[0];
       final endPoint = results[1];
       final carDetails = results[2];
-
+      print('Hello');
+      print(startPoint);
+      print(endPoint);
       if (carDetails == null){
         throw Exception('Car details not found');
       }
@@ -98,12 +100,6 @@ class _PostRideFormState extends State<PostRideForm> {
         });
       });
   }
-
-
-    
-
-    
-    
 
   // Future calculatePrice(carReg) async {
   // GeoCode geoCode = GeoCode();
