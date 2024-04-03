@@ -102,4 +102,29 @@ module.exports = {
     );
     return res.ok(chats);
   },
+  getUserMessages: async (req, res) => {
+    const db = Rides.getDatastore().manager;
+    const findRides = await db
+      .collection("rides")
+      .find({
+        $or: [
+          {
+            "chats.to": req.params.username,
+          },
+          {
+            "chats.from": req.params.username,
+          },
+        ],
+      })
+      .project({ chats: 1 })
+      .toArray();
+    const filteredChats = findRides.map((ride) => {
+      ride.chats = ride.chats.filter(
+        (chat) =>
+          chat.from === req.params.username || chat.to === req.params.username
+      );
+      return ride;
+    });
+    return res.ok(filteredChats);
+  },
 };
