@@ -85,6 +85,20 @@ Future<User> patchUser(user) async {
   }
 }
 
+// Delete user
+Future<User?>deleteUser(user) async {
+  final uri = Uri.parse("http://localhost:1337/users/${user.username}");
+  final response = await http.delete(uri);
+
+  if(response.statusCode == 200) {
+    print("something");
+    print(response.body);
+    return null;
+  } else {
+    throw Exception("Failed to delete user account");
+  }
+}
+
 Future fetchDistance(waypoints) async {
   final response = await httpGeoapify.get('?waypoints=$waypoints&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
   return response;

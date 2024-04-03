@@ -38,6 +38,18 @@ class ProfileScreen extends StatelessWidget {
                     child: const Text('Edit Profile')
                 ),
               ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      deleteUser(userData);
+                    },
+                    style:ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: const Text('Delete your account')
+                )
+              ),
               const SizedBox(height: 40),
               new CircleAvatar(
                 radius: 70,
