@@ -1,3 +1,4 @@
+import 'package:fe/classes/get_user_login.dart';
 import 'package:flutter/material.dart';
 import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -71,6 +72,7 @@ class _PostRideFormState extends State<PostRideForm> {
       final double? endLat = endPoint.latitude;
       final double? endLong = endPoint.longitude;
 
+      final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
       final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
 
       final metreDistanceFuture = fetchDistance(apiString);
@@ -162,6 +164,7 @@ class _PostRideFormState extends State<PostRideForm> {
       _startPointTextController,
       _endPointTextController,
       _inputPriceTextController,
+      _inputRegTextController,
     ];
 
     for (final controller in controllers) {
@@ -177,6 +180,11 @@ class _PostRideFormState extends State<PostRideForm> {
 
   @override
   Widget build(BuildContext context) {
+    final userData = context.read<AuthState>().userInfo;
+    //if user has a car return form, if not present message - need to have car and licence validated to post ride
+    // print(userData.car['reg']);
+
+    if (userData.car['reg'] != null) {
     return Form(
       onChanged: _updateFormProgress, // NEW
       child: Column(
@@ -288,6 +296,21 @@ class _PostRideFormState extends State<PostRideForm> {
         ],
       ),
     );
+
+    } else {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+         title: const Text('jumpIn')
+      ),
+      body: const Center(
+        child: Text(
+        'You need to have a car to post a ride.',
+        style: TextStyle(fontSize: 16.0),
+        ),
+      ),
+    );
+    }
   }
 }
 //DROP DOWN BUTTO
