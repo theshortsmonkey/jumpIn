@@ -1,4 +1,5 @@
 import 'package:fe/classes/get_user_login.dart';
+import 'package:fe/login_page.dart';
 import 'package:flutter/material.dart';
 import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -179,7 +180,8 @@ class _PostRideFormState extends State<PostRideForm> {
     //if user has a car return form, if not present message - need to have car and licence validated to post ride
     // print(userData.car['reg']);
 
-    if (userData.car['reg'] != null) {
+    if (context.read<AuthState>().isAuthorized) { 
+    if (userData.car != null) {
     return Form(
       onChanged: _updateFormProgress, // NEW
       child: Column(
@@ -306,6 +308,9 @@ class _PostRideFormState extends State<PostRideForm> {
       ),
     );
     }
+  } else {
+    return const LoginPage();
+  }
   }
 }
 //DROP DOWN BUTTO
@@ -376,3 +381,4 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
     );
   }
 }
+
