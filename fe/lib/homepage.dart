@@ -18,10 +18,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final futureUser = fetchUserByUsername('testUSername1');
     futureUser.then((user) {
     context.read<AuthState>().setUser(user);
+      Navigator.of(context).pushNamed('/profile');
     });
   }
   void _showSignUpScreen() {
   Navigator.of(context).pushNamed('/signup');
+  }
+  void _showLoginPage() {
+  Navigator.of(context).pushNamed('/login');
   }
   void _showPostRideScreen() {
   Navigator.of(context).pushNamed('/postride');
@@ -36,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyleL = theme.textTheme.bodyLarge;
     final titleStyleL = theme.textTheme.titleLarge;
     return Scaffold(
       appBar: AppBar(
@@ -44,11 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
          title: Text(widget.title),
                 actions: [
                 IconButton(
-                icon : const Icon(Icons.login_outlined),
+                icon : const Icon(Icons.verified_user),
                 onPressed:_setDefaultUser ,
                 ),
                 IconButton(
-                icon : const Icon(Icons.verified_user_rounded),
+                icon : const Icon(Icons.account_box_outlined),
                 onPressed:_showProfilePage ,
                 ),
                 IconButton(
@@ -57,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 IconButton(
                 icon : const Icon(Icons.login),
-                onPressed:_showSignUpScreen ,
+                onPressed:_showLoginPage ,
                 ),
                 IconButton(
                 icon : const Icon(Icons.report),

@@ -1,33 +1,76 @@
+import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
-import 'classes/post_user_class.dart';
+import 'classes/get_user_class.dart';
+import 'package:email_validator/email_validator.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  final String submitType;
+  const SignUpForm({super.key, required this.submitType});
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController(); //record text inputs
-  final _lastNameTextController = TextEditingController();
-  final _usernameTextController = TextEditingController();
-  final _passwordTextController = TextEditingController();
-  final _emailTextController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
+  var _firstNameTextController = TextEditingController(text: '');
+  var _lastNameTextController = TextEditingController(text: '');
+  var _usernameTextController = TextEditingController(text: '');
+  var _passwordTextController = TextEditingController(text: '');
+  var _emailTextController = TextEditingController(text: '');
+  var _phoneNumberController = TextEditingController(text: '');
+  var _bioController = TextEditingController(text: '');
+  @override
+  void initState () {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    final provider = Provider.of<AuthState>(context, listen:false);
+    final currUser = provider.userInfo;
+    _firstNameTextController = TextEditingController(text: currUser.firstName);
+    _lastNameTextController = TextEditingController(text: currUser.lastName);
+    _usernameTextController = TextEditingController(text: currUser.username);
+    _passwordTextController = TextEditingController(text: currUser.password);
+    _emailTextController = TextEditingController(text: currUser.email);
+    _phoneNumberController = TextEditingController(text: currUser.phoneNumber);
+    _bioController = TextEditingController(text: currUser.bio);
+    setState(() {});
+    });
+  }
 
+
+  bool _isEmailValid = true;
+  bool _isPhoneNumberValid = true;
+  bool _isUserNameValid = true;
+  bool _isPasswordValid = true;
+  bool _isPasswordObscured = true;
   double _formProgress = 0;
 
-  void _showWelcomeScreen() {
-    final userData = UserData(
+  void _showWelcomeScreen() async {
+    final userData = User(
       firstName: _firstNameTextController.text,
       lastName: _lastNameTextController.text,
       username: _usernameTextController.text,
       email: _emailTextController.text,
       password: _passwordTextController.text,
       phoneNumber: _phoneNumberController.text,
+      bio: _bioController.text,
     );
-    Navigator.of(context).pushNamed('/profile', arguments: userData);
+    if (widget.submitType == 'post') {
+    final postedUser = await postUser(userData);
+    final futureUser = fetchUserByUsername(postedUser.username);
+    futureUser.then((user) {
+      context.read<AuthState>().setUser(user);
+      Navigator.of(context).pushNamed('/');
+    });
+    } else {
+      final patchedUser = await patchUser(userData);
+      final futureUser = fetchUserByUsername(patchedUser.username);
+      futureUser.then((user) {
+        context.read<AuthState>().setUser(user);
+        Navigator.of(context).pushNamed('/profile');
+      });      
+    }
   }
 
   void _updateFormProgress() {
@@ -39,6 +82,7 @@ class _SignUpFormState extends State<SignUpForm> {
       _usernameTextController,
       _emailTextController,
       _phoneNumberController,
+      _bioController
     ];
 
     for (final controller in controllers) {
@@ -51,56 +95,113 @@ class _SignUpFormState extends State<SignUpForm> {
       _formProgress = progress;
     });
   }
+  void _setIsPasswordObscured() {
+    setState(() {
+      _isPasswordObscured = !_isPasswordObscured;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    String titleText;
+    widget.submitType == 'post' 
+    ? titleText = 'Sign Up'
+    : titleText = 'Edit Profile';
     return Form(
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedProgressIndicator(value: _formProgress), 
-          Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _usernameTextController,
+              decoration: InputDecoration(
+                labelText: 'Username',
+                errorMaxLines: 3,
+                errorText: _isUserNameValid ? null : 'Enter valid username: letters, numbers or underscore. 5-20 characters'
+                ),
+                onChanged: (value) {
+                  final RegExp regex = RegExp(r'^[a-zA-Z0-9_]{5,20}$');
+                  setState(() {
+                    _isUserNameValid = regex.hasMatch(value);
+                  });
+                },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _firstNameTextController,
-              decoration: const InputDecoration(hintText: 'First name'),
+              decoration: const InputDecoration(labelText: 'First name'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _lastNameTextController,
-              decoration: const InputDecoration(hintText: 'Last name'),
+              decoration: const InputDecoration(labelText: 'Last name'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _emailTextController,
-              decoration: const InputDecoration(hintText: 'Email: joebloggs@example.com'),
+              decoration: InputDecoration(
+                labelText: 'Email',
+                errorText: _isEmailValid ? null : 'enter a valid email address', 
+                ),
+            onChanged: (value) {
+              setState(() {
+                _isEmailValid = EmailValidator.validate(value);
+              });
+            }
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _phoneNumberController,
-              decoration: const InputDecoration(hintText: 'Phone Number'),
+              decoration: InputDecoration(
+                labelText: 'Phone Number',
+                errorText: _isPhoneNumberValid ? null : 'enter valid UK phone number'
+                ),
+              onChanged: (value) {
+                final RegExp regex = RegExp(r'^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$');
+                setState(() {
+                  _isPhoneNumberValid = regex.hasMatch(value);
+                });
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _usernameTextController,
-              decoration: const InputDecoration(hintText: 'Username'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
+              obscureText: _isPasswordObscured,
               controller: _passwordTextController,
-              decoration: const InputDecoration(hintText: 'Password'),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(_isPasswordObscured ? Icons.visibility : Icons.visibility_off),
+                  onPressed:_setIsPasswordObscured,
+                ),
+                errorMaxLines: 3,
+                errorText: _isPasswordValid ? null : "Enter valid password: At least one lowercase letter, one uppercase letter, one digit, one special character '`@!%*?&', at least 8 characters"
+                ),
+                onChanged: (value) {
+                  final RegExp regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+                  setState(() {
+                    _isPasswordValid = regex.hasMatch(value);
+                  });
+                }
+            ),
+          ),
+            Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _bioController,
+              decoration: const InputDecoration(labelText: 'Bio'),
             ),
           ),
           TextButton(
@@ -118,7 +219,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             onPressed:
             _formProgress > 0.99 ? _showWelcomeScreen : null,
-            child: const Text('Sign up'),
+            child: Text(titleText),
           ),
         ],
       ),
@@ -189,5 +290,6 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
         backgroundColor: _colorAnimation.value?.withOpacity(0.4),
       ),
     );
+
   }
 }

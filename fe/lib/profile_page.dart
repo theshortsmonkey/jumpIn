@@ -1,3 +1,5 @@
+import 'dart:html';
+import './login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'classes/get_user_class.dart';
@@ -12,7 +14,9 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = context.read<AuthState>().userInfo;
-    return Scaffold(
+    final imgUrl = "http://localhost:1337/users/${userData.username}/image";
+    return context.read<AuthState>().isAuthorized
+    ? Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: const Text('jumpIn')
@@ -25,7 +29,9 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/editprofile');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
@@ -33,9 +39,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              const CircleAvatar(
+              new CircleAvatar(
                 radius: 70,
-                backgroundImage: NetworkImage('http://localhost:1337/users/testUSername4/image'),
+                backgroundImage: NetworkImage(imgUrl),
               ),
               const SizedBox(height: 20),
               itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
@@ -50,7 +56,6 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
               userData.identity_verification_status ? 
               itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
-              //userData.licence_expiry_date
               :
               SizedBox(
                 width: double.infinity,
@@ -63,7 +68,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20,),
-              userData.car["tax_due_date"].isNotEmpty ?
+              // userData.car["tax_due_date"].isNotEmpty
+              userData.car != null ?
               carBox(userData.car)
                           :
                           SizedBox(
@@ -80,7 +86,8 @@ class ProfileScreen extends StatelessWidget {
           ),
         )
       ),
-    );
+    )
+    : const LoginPage();
   }
 
   carBox(car) {
