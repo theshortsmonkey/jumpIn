@@ -1,9 +1,13 @@
+import 'package:fe/classes/get_user_login.dart';
 import 'package:flutter/material.dart';
 import 'classes/post_ride_class.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:geocode/geocode.dart';
 import 'dart:async';
 import 'api.dart';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
+
 
 class PostRideForm extends StatefulWidget {
   const PostRideForm({super.key});
@@ -18,10 +22,12 @@ class _PostRideFormState extends State<PostRideForm> {
   final _endPointTextController = TextEditingController();
   final _endRegionTextController = TextEditingController();
   final _inputPriceTextController = TextEditingController();
+  final _carRegTextController = TextEditingController();
   dynamic? _calculatedPrice; //in pence - to store calc'd result
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int? _selectedSeats;
+
 
   double _formProgress = 0;
 
@@ -37,34 +43,120 @@ class _PostRideFormState extends State<PostRideForm> {
     );
     Navigator.of(context).pushNamed('/singleridetest', arguments: rideData);
   }
+  
+  Future calculatePrice(carReg) async {
+  GeoCode geoCode = GeoCode();
 
-  Future calculatePrice() async {
-    GeoCode geoCode = GeoCode();
-    List<Future<Coordinates>> futures = [
-      geoCode.forwardGeocoding(address: _startPointTextController.text),
-      geoCode.forwardGeocoding(address: _endPointTextController.text),
-    ];
+  final startPointFuture = geoCode.forwardGeocoding(address: _startPointTextController.text);
+  final endPointFuture = geoCode.forwardGeocoding(address: _endPointTextController.text);
+  final carDetailsFuture = fetchCarDetails(carReg);
 
-    Future.wait(futures).then((List<Coordinates> results) {
-    // Handle the results of all completed futures
-      final double? startLat = results[0].latitude;
-      final double? startLong = results[0].longitude; 
-      final double? endLat = results[1].latitude;
-      final double? endLong = results[1].longitude;
+  return Future.wait([startPointFuture, endPointFuture, carDetailsFuture])
+    .then((results) {
+      final startPoint = results[0];
+      final endPoint = results[1];
+      final carDetails = results[2];
+
+      if (carDetails == null){
+        throw Exception('Car details not found');
+      }
+
+      final fuelType = carDetails["fuelType"];
+      final co2 = carDetails["co2Emissions"]; // emissions in g/km
+      final fuelPriceFuture = fetchFuelPrice(fuelType);
+      print(fuelType);
+
+      // Handle the results of all completed futures
+      final double? startLat = startPoint.latitude;
+      final double? startLong = startPoint.longitude; 
+      final double? endLat = endPoint.latitude;
+      final double? endLong = endPoint.longitude;
 
       final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
+      final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
 
-      final dynamic geoapifyResponse = fetchDistance(apiString);
-      print(geoapifyResponse.runtimeType);
+      final metreDistanceFuture = fetchDistance(apiString);
 
-    }).catchError((error) {
-    // Handle errors if any of the futures fail
-      print('Error occurred: $error');
-    });
+      return Future.wait([Future.value(fuelType), Future.value(co2), fuelPriceFuture, metreDistanceFuture])
+        .then((results){
+          final fuelType = results[0];
+          final co2 = results[1];
+          final fuelPrice = results[2];
+          final metreDistance = results[3];
+          final double fuelEfficiency;
+          final double journeyPrice;
+        
+          if(fuelType == 'PETROL'){
+            //use co2 to calc mpg and hence cost - petrol: 2310g/L; diesel: 2680g/L
+            fuelEfficiency = (2310/co2); //in km/L 
+            journeyPrice = (metreDistance/(1000*fuelEfficiency)) * fuelPrice;
+          } else { //DIESEL
+            fuelEfficiency = (2680/co2); //in km/L 
+            journeyPrice = (metreDistance/(1000*fuelEfficiency)) * fuelPrice;
+          }
+
+          print(journeyPrice);
+        });
+      });
+  }
+
+
+    
+
+    
+    
+
+  // Future calculatePrice(carReg) async {
+  // GeoCode geoCode = GeoCode();
+
+  // final startPointFuture = geoCode.forwardGeocoding(address: _startPointTextController.text);
+  // final endPointFuture = geoCode.forwardGeocoding(address: _endPointTextController.text);
+  // final carDetailsFuture = fetchCarDetails(carReg);
+
+  // try {
+  //   final List results = await Future.wait([startPointFuture, endPointFuture, carDetailsFuture]);
+    
+  //   final startPoint = results[0];
+  //   final endPoint = results[1];
+  //   final carDetails = results[2];
+
+  //   final fuelType = carDetails["fuelType"];
+  //   final co2 = carDetails["co2Emissions"]; //emissions in g/km
+  //   final fuelPrice = await fetchFuelPrice(fuelType);
+    
+  //   // Handle the results of all completed futures
+  //   final double? startLat = startPoint.latitude;
+  //   final double? startLong = startPoint.longitude; 
+  //   final double? endLat = endPoint.latitude;
+  //   final double? endLong = endPoint.longitude;
+
+  //   final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
+
+  //   final dynamic metreDistance = await fetchDistance(apiString);
+  //   final fuelEfficiency;
+  //   final double journeyPrice;
+
+  //   if(fuelType == 'PETROL'){
+  //     //use co2 to calc mpg and hence cost - petrol: 2310g/L; diesel: 2680g/L
+  //     fuelEfficiency = (2310/co2); //in km/L 
+  //     journeyPrice = (metreDistance/(1000*fuelEfficiency)) * fuelPrice;
+  //   } else { //DIESEL
+  //     fuelEfficiency = (2680/co2); //in km/L 
+  //     journeyPrice = (metreDistance/(1000*fuelEfficiency)) * fuelPrice;
+  //   }
+  //   print(journeyPrice);
+  // } catch (error) {
+  //   // Handle errors if any of the futures fail
+  //   print('Error occurred: $error');
+  // }
+  // }
+
+
+
     // setState((){
     //   _calculatedPrice = price;
     // });
-  }
+  
 
   void _updateFormProgress() {
     var progress = 0.0;
@@ -72,6 +164,7 @@ class _PostRideFormState extends State<PostRideForm> {
       _startPointTextController,
       _endPointTextController,
       _inputPriceTextController,
+      _inputRegTextController,
     ];
 
     for (final controller in controllers) {
@@ -87,6 +180,11 @@ class _PostRideFormState extends State<PostRideForm> {
 
   @override
   Widget build(BuildContext context) {
+    final userData = context.read<AuthState>().userInfo;
+    //if user has a car return form, if not present message - need to have car and licence validated to post ride
+    // print(userData.car['reg']);
+
+    if (userData.car['reg'] != null) {
     return Form(
       onChanged: _updateFormProgress, // NEW
       child: Column(
@@ -124,7 +222,14 @@ class _PostRideFormState extends State<PostRideForm> {
               decoration: const InputDecoration(hintText: 'Select end region'),
             ),
           ),
-          ElevatedButton(onPressed: () { calculatePrice(); }, child: Text('Calculate price')),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextFormField(
+              controller: _carRegTextController,
+              decoration: const InputDecoration(hintText: 'Enter Car Reg'),
+            ),
+          ),
+          ElevatedButton(onPressed: () { calculatePrice(_carRegTextController.text); }, child: Text('Calculate price')),
           Text('Select your date below'),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -191,6 +296,21 @@ class _PostRideFormState extends State<PostRideForm> {
         ],
       ),
     );
+
+    } else {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+         title: const Text('jumpIn')
+      ),
+      body: const Center(
+        child: Text(
+        'You need to have a car to post a ride.',
+        style: TextStyle(fontSize: 16.0),
+        ),
+      ),
+    );
+    }
   }
 }
 //DROP DOWN BUTTO
