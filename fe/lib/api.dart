@@ -42,7 +42,9 @@ Future<List<User>> fetchUsers() async {
 }
 
 Future<User> fetchUserByUsername(username) async {
+  print('start');
   final response = await httpEnhanced.get('/users/$username');
+  print(response);
   if (response.isNotEmpty) {
    var user = User.fromJson(response as Map<String, dynamic>);
       return user;

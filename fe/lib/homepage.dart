@@ -40,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyleL = theme.textTheme.bodyLarge;
     final titleStyleL = theme.textTheme.titleLarge;
     return Scaffold(
       appBar: AppBar(
@@ -48,11 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
          title: Text(widget.title),
                 actions: [
                 IconButton(
-                icon : const Icon(Icons.login_outlined),
+                icon : const Icon(Icons.verified_user),
                 onPressed:_setDefaultUser ,
                 ),
                 IconButton(
-                icon : const Icon(Icons.verified_user_rounded),
+                icon : const Icon(Icons.account_box_outlined),
                 onPressed:_showProfilePage ,
                 ),
                 IconButton(

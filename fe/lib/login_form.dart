@@ -17,6 +17,27 @@ class _LoginFormState extends State<LoginForm> {
 
   double _formProgress = 0;
   
+  void _handleLogin() async {  
+    try {
+
+      final futureUser = await fetchUserByUsername(_usernameTextController.text);
+    print('before');
+    print(futureUser);
+    print('after');
+
+    final provider = Provider.of<AuthState>(context, listen:false);
+    // final currUser = provider.userInfo;
+    provider.setUser(futureUser);
+    print(provider.userInfo);
+    // Navigator.of(context).pushNamed('/');
+    } catch (e) {
+      print(e);
+    }
+  // futureUser.then((user) {
+  // }).catchError((e) {
+  //   print('test');
+  // });
+}
   
   void _showSignupPage() {
     Navigator.of(context).pushNamed('/signup', );
@@ -89,13 +110,7 @@ class _LoginFormState extends State<LoginForm> {
               }),
             ),
             onPressed:
-            _formProgress > 0.99 ? () async {  
-  final futureUser = fetchUserByUsername(_usernameTextController.text);
-  futureUser.then((user) {
-    context.read<AuthState>().setUser(user);
-    Navigator.of(context).pushNamed('/');
-  });
-} : null,
+            _formProgress > 0.99 ? _handleLogin : null,
             child: const Text('Login'),
           ),
           TextButton(
