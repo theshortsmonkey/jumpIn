@@ -1,5 +1,4 @@
 import 'package:fe/edit_profile_page.dart';
-
 import './login_page.dart';
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
@@ -12,7 +11,7 @@ import './single_ride.dart';
 import 'package:google_fonts/google_fonts.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
-
+import "./validate_licence.dart";
 
 void main() {
   runApp(const MyApp());
@@ -60,7 +59,8 @@ class MyApp extends StatelessWidget {
         "/test": (context) => const TestPage(),
         "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide(),
-        '/editprofile': (context) => const EditProfilePage()
+        '/editprofile': (context) => const EditProfilePage(),
+        '/validatelicence': (context) => const ValidateLicencePage(),
         }
     )
    );

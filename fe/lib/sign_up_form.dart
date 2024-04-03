@@ -47,6 +47,8 @@ class _SignUpFormState extends State<SignUpForm> {
   double _formProgress = 0;
 
   void _showWelcomeScreen() async {
+    final provider = Provider.of<AuthState>(context, listen:false);
+    final currUser = provider.userInfo;
     final userData = User(
       firstName: _firstNameTextController.text,
       lastName: _lastNameTextController.text,
@@ -55,6 +57,7 @@ class _SignUpFormState extends State<SignUpForm> {
       password: _passwordTextController.text,
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
+      identity_verification_status: currUser.identity_verification_status
     );
     if (widget.submitType == 'post') {
     final postedUser = await postUser(userData);

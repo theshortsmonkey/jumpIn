@@ -46,9 +46,7 @@ Future<List<User>> fetchUsers() async {
 
 Future<User> fetchUserByUsername(username) async {
   try{
-  print('start');
   final response = await httpEnhanced.get('/users/$username');
-  print(response);
    var user = User.fromJson(response as Map<String, dynamic>);
       return user;
   } catch (e) {
@@ -73,8 +71,6 @@ Future<User> patchUser(user) async {
   String uri = 'http://localhost:1337/users/${user.username}';
   final response = await http.patch(Uri.parse(uri), headers: {"Content-Type": "application/json"},body: json);
   if(response.statusCode == 200) {
-  //  var user = User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-  //   return user;
     List<User> users = jsonDecode(response.body).map<User>((item) {
       return User.fromJson(item as Map<String, dynamic>);
     }).toList();
@@ -85,7 +81,6 @@ Future<User> patchUser(user) async {
   }
 }
 
-// Delete user
 Future<User?>deleteUser(user) async {
   final uri = Uri.parse("http://localhost:1337/users/${user.username}");
   final response = await http.delete(uri);
@@ -116,8 +111,6 @@ Future fetchFuelPrice(fuelType) async {
   } else {
     fuelPrice = response["stations"][0]['prices']['B7']; //diesel price
   }
-
-  print(fuelPrice);
   return fuelPrice;
 }
 
@@ -133,7 +126,6 @@ Future fetchCarDetails(carReg) async {
       },
       body: jsonEncode({'registrationNumber': carReg}),
     ); 
-    print(json.decode(response.body));
     return (json.decode(response.body));
   } catch (e) {
     throw Exception("Error fetching car details: $e");
