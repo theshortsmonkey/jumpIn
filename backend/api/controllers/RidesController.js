@@ -92,7 +92,7 @@ module.exports = {
         chats: findRide.chats,
       }
     ).fetch();
-    return res.ok(updatedRide);
+    return res.ok(updatedRide.chats);
   },
   getMessages: async (req, res) => {
     const findRide = await Rides.findOne({ id: req.params.ride_id });
