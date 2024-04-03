@@ -543,6 +543,27 @@
 
 "DELETE /rides/:ride_id": {
   "description": "delete the ride data for the requested ride id",
+},
+
+
+"POST /rides/:ride_id/messages": {
+  "description": "add a message to a user in a ride",
+  "exampleRequest" : {
+    "to": "jamal_singh",
+    "from": "lucy_jones",
+    "message": "Please pick me up outside Tesco"
+  }
+},
+
+"GET /rides/:ride_id/:username/messages": {
+  "description": "retrieve all messages relevent to a user in a ride",
+  "exampleResponse" : [{ 
+      "to": "jamal_singh",
+      "from": "lucy_jones",
+      "date_and_time": "2024-04-02T14:19:35.121Z",
+      "message": "Please pick me up outside Tesco"
+    }]
 }
+
 
 }
