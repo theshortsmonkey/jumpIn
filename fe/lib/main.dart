@@ -1,5 +1,5 @@
 import 'package:fe/edit_profile_page.dart';
-//import 'package:fe/upload_profile_pic.dart';
+import 'package:fe/upload_profile_pic.dart';
 import './login_page.dart';
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
