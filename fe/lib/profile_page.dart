@@ -20,10 +20,6 @@ bool _isDeleted = false;
 bool _areYouSure = false;
 String _deleteButtonText ='Delete your account';
 dynamic userData;
-final carDetails = {
-  'reg': 'abc',
-
-}
 @override
 void initState() {
   super.initState();
@@ -96,18 +92,18 @@ void _handleDelete () async {
               ),
               const SizedBox(height: 10),
 
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/uploadProfilePic');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(15),
-                    ),
-                    child: const Text('Upload Profile Picture')
-                ),
-              ),
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: ElevatedButton(
+              //       onPressed: () {
+              //         Navigator.of(context).pushNamed('/uploadProfilePic');
+              //       },
+              //       style: ElevatedButton.styleFrom(
+              //         padding: const EdgeInsets.all(15),
+              //       ),
+              //       child: const Text('Upload Profile Picture')
+              //   ),
+              // ),
               Container(
                 padding: EdgeInsets.all(7),
                 decoration: BoxDecoration(
