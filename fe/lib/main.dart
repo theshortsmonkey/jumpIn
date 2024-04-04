@@ -1,5 +1,5 @@
 import 'package:fe/edit_profile_page.dart';
-
+import 'package:fe/upload_profile_pic.dart';
 import './login_page.dart';
 import 'package:flutter/material.dart';
 import './sign_up_page.dart';
@@ -14,7 +14,8 @@ import 'package:google_fonts/google_fonts.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
 import './ride_chat.dart';
-
+import "./validate_licence.dart";
+import "./validate_car.dart";
 
 void main() {
   runApp(const MyApp());
@@ -44,8 +45,11 @@ class MyApp extends StatelessWidget {
             fontSize: 30,
             fontStyle: FontStyle.italic,
           ),
+          headlineSmall: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold
+          ),
           bodyMedium: GoogleFonts.merriweather(),
-          displaySmall: GoogleFonts.pacifico(),
         )
       ),
       home: const MyHomePage(title:"jumpIn"),
@@ -65,6 +69,9 @@ class MyApp extends StatelessWidget {
         '/editprofile': (context) => const EditProfilePage(),
         '/inbox': (context) => const GetMessage(),
         '/ridechat': (context) => const GetRideChat()
+        '/uploadProfilePic': (context) => const UploadProfilePic(),
+        '/validatelicence': (context) => const ValidateLicencePage(),
+        '/validatecar': (context) => const ValidateCarPage(),
         }
     )
    );

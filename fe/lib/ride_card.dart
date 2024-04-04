@@ -14,6 +14,7 @@ Widget build(BuildContext context) {
   final titleStyleL = theme.textTheme.titleLarge;
   final titleStyleM = theme.textTheme.titleMedium;
   final titleStyleS = theme.textTheme.titleSmall;
+  final String imgURL = 'http://localhost:1337/users/${ride?.driverUsername}/image';
   return GestureDetector(
     onTap: () {
       //enable action upon tapping the card
@@ -38,9 +39,9 @@ Widget build(BuildContext context) {
             children: <Widget>[
               // Add an image widget to display an image
               Column(children: [
-                const CircleAvatar(
+                new CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/user.JPG'),
+                backgroundImage: NetworkImage(imgURL),
               ),
               SizedBox(height: 10),
               Text(
