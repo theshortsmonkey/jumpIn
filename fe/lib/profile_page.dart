@@ -15,15 +15,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen>{
+bool isDriver = false;
 bool _isDeleted = false;
 bool _areYouSure = false;
 String _deleteButtonText ='Delete your account';
 dynamic userData;
+final carDetails = {
+  'reg': 'abc',
+
+}
 @override
 void initState() {
   super.initState();
     final provider = Provider.of<AuthState>(context, listen:false);
     userData = provider.userInfo;
+    if (userData.identity_verification_status && userData.driver_verification_status) {
+      isDriver = true;
+    }
 }
 
 void _handleDelete () async {
@@ -91,17 +99,25 @@ void _handleDelete () async {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: _handleDelete,
-                    style:ElevatedButton.styleFrom(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/uploadProfilePic');
+                    },
+                    style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
-                    child: (Text(_deleteButtonText))
-                )
+                    child: const Text('Upload Profile Picture')
+                ),
               ),
-              const SizedBox(height: 40),
-              CircleAvatar(
-                radius: 70,
-                backgroundImage: NetworkImage(imgUrl),
+              Container(
+                padding: EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: isDriver ? Colors.green : Colors.amberAccent,
+                  shape: BoxShape.circle,
+                  ),
+                child: new CircleAvatar(
+                    radius: 70,
+                    backgroundImage: NetworkImage(imgUrl),
+                  ),
               ),
               const SizedBox(height: 20),
               itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
@@ -144,7 +160,17 @@ void _handleDelete () async {
                     ),
                     child: const Text('Validate vehicle')
                 ),
-          )
+          ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: _handleDelete,
+                    style:ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: Text(_deleteButtonText)
+                )
+              ),
           ]
           ),
         )
