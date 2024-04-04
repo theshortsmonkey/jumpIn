@@ -42,8 +42,11 @@ class MyApp extends StatelessWidget {
             fontSize: 30,
             fontStyle: FontStyle.italic,
           ),
+          headlineSmall: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold
+          ),
           bodyMedium: GoogleFonts.merriweather(),
-          displaySmall: GoogleFonts.pacifico(),
         )
       ),
       home: const MyHomePage(title:"jumpIn"),

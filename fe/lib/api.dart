@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enhanced_http/enhanced_http.dart';
+import 'package:fe/classes/post_ride_class.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_ride_class.dart';
 import 'dart:async';
@@ -9,12 +10,44 @@ import "package:http/http.dart" as http;
 
 EnhancedHttp httpEnhanced = EnhancedHttp(baseURL: 'http://localhost:1337');
 EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
+EnhancedHttp httpGeocode = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/geocode');
 EnhancedHttp httpFuel = EnhancedHttp(baseURL: 'https://www.bp.com');
 
-Future<List<Ride>> fetchRides() async {
-  final response = await httpEnhanced.get('/rides');
-  if (response.isNotEmpty) {
-    List<Ride> rides = response.map<Ride>((item) {
+Future<List<Ride>> fetchRides({
+  String? to,
+  String? from,
+  String? date_and_time,
+  int? price,
+  int? available_seats,
+  int? carbon_emissions
+}) async {
+  final queryParams = <String, dynamic>{};
+    if (to?.isNotEmpty ?? false) {
+    queryParams['to'] = to;
+    }
+    if (from?.isNotEmpty ?? false) {
+      queryParams['from'] = from;
+    }
+    if (date_and_time != null) {
+      queryParams['date_and_time'] = date_and_time;
+    }
+    if (price != null) {
+      queryParams['price'] = price;
+    }
+    if (available_seats != null) {
+      queryParams['available_seats'] = available_seats;
+    }
+    if (carbon_emissions != null) {
+      queryParams['carbon_emissions'] = carbon_emissions;
+    }
+
+
+  final url = Uri.http('localhost:1337', '/rides', queryParams);
+  print(url);
+  final response = await http.get(url);
+  if (response.body.isNotEmpty) {
+    final responseData = json.decode(response.body);
+    List<Ride> rides = responseData.map<Ride>((item) {
       return Ride.fromJson(item as Map<String, dynamic>);
     }).toList();
     return rides;
@@ -23,8 +56,8 @@ Future<List<Ride>> fetchRides() async {
   }
 }
 
-Future<Ride> fetchRideById() async {
-  final response = await httpEnhanced.get('/rides/660b0b6dbc53dd2340ceeda0'); //hardcoded 
+Future<Ride> fetchRideById(rideId) async {
+  final response = await httpEnhanced.get('/rides/${rideId}'); //hardcoded 
   if (response.isNotEmpty) {
       return Ride.fromJson(response as Map<String, dynamic>);
   } else {
@@ -84,10 +117,16 @@ Future<User> patchUser(user) async {
   throw Exception("User not found");
   }
 }
+Future fetchLatLong(city) async {
+  final response = await httpGeocode.get('/search?text=$city&lang=en&limit=10&type=city&filter=countrycode:gb&apiKey=9ac318b7da314e00b462f8801c758396');
+  final List longLat = response['features'][0]['geometry']['coordinates'];
+  return longLat;
+}
 
 Future fetchDistance(waypoints) async {
   final response = await httpGeoapify.get('?waypoints=$waypoints&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
-  return response;
+  final distance = response['features'][0]['properties']['distance'];
+  return distance;
 }
 
 Future fetchFuelPrice(fuelType) async {
@@ -126,6 +165,20 @@ Future fetchCarDetails(carReg) async {
   } catch (e) {
     throw Exception("Error fetching car details: $e");
      // or handle the error accordingly
+  }
+}
+
+Future<Ride> postRide(ride) async {
+  String json = jsonEncode(ride);
+  final response = await http.post(Uri.parse('http://localhost:1337/rides'), headers: {"Content-Type": "application/json"},body: json);
+  if(response.statusCode == 200) {
+        print('Im in future');
+   var rideResponse = Ride.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  
+    return rideResponse;
+  }
+  else{
+  throw Exception("Ride could not be posted");
   }
 }
 

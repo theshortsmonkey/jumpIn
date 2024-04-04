@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed:_showSignUpScreen,
             child: Text(
               'Find a ride',
-              style: titleStyleL),
+              style: theme.textTheme.displayMedium),
             ),
             const SizedBox(height:30),
             ElevatedButton(
@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed:_showPostRideScreen,
             child: Text(
               'Post a ride',
-              style: titleStyleL
+              style: theme.textTheme.displayMedium
             ),
             )
           ],

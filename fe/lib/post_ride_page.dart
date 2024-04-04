@@ -9,11 +9,14 @@ class PostRidePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Post a Ride'),
       ),
-      body: const Center(
-        child: SizedBox(
-          width: 400,
-          child: Card(
-            child: (PostRideForm()),
+      body: Center(
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: 400,
+            child: Card(
+              child: (PostRideForm()),
+            ),
           ),
         ),
       ),
