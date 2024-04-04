@@ -171,6 +171,11 @@ Future fetchDistance(waypoints) async {
   return distance;
 }
 
+Future fetchGeoJson(waypoints) async {
+  final response = await httpGeoapify.get('?waypoints=$waypoints&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
+  return response;
+}
+
 Future fetchFuelPrice(fuelType) async {
   final double fuelPrice;
   final response = await httpFuel.get('/en_gb/united-kingdom/home/fuelprices/fuel_prices_data.json',

@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_map_geojson/flutter_map_geojson.dart';
 
 //NEEDS TO BE FIXED - NOT LOADING CURRENTLY
 
@@ -21,6 +22,14 @@ class SingleRide extends StatefulWidget {
 class _SingleRideState extends State<SingleRide> {
   late Future<Ride> futureRide;
   late String rideId ='';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _geoJsonObj = await fetchGeoJson()
+  }
+  
 
   @override
   void didChangeDependencies() {
@@ -39,6 +48,36 @@ class _SingleRideState extends State<SingleRide> {
     final titleStyleL = theme.textTheme.titleLarge;
     final titleStyleM = theme.textTheme.titleMedium;
     final titleStyleS = theme.textTheme.titleSmall;
+
+    Future getGeoJsonObj(futureRide) async {
+
+      print(futureRide);
+      
+      GeoJsonParser myGeoJson = GeoJsonParser();
+
+      final startPointFuture = fetchLatLong(futureRide.to);
+      final endPointFuture = fetchLatLong(futureRide.from);
+
+      return Future.wait([startPointFuture, endPointFuture])
+        .then((results) {
+          final startPoint = results[0];
+          final endPoint = results[1];
+
+          final double? startLat = startPoint[1];
+          final double? startLong = startPoint[0]; 
+          final double? endLat = endPoint[1];
+          final double? endLong = endPoint[0];
+
+          final String apiString = "lonlat:${startLong},${startLat}|lonlat:${endLong},${endLat}";
+
+          final geoJsonObjFuture = fetchGeoJson(apiString);
+
+          return myGeoJson.parseGeoJsonAsString(geoJsonObjFuture);
+        });
+    }
+
+    final mapObj = getGeoJsonObj(futureRide);
+
     List<LatLng> polylinePoints = [
       LatLng(53.47764, -2.23892),//start
       LatLng(51.51408, -0.10648), //end
@@ -89,7 +128,7 @@ class _SingleRideState extends State<SingleRide> {
                               padding: const EdgeInsets.all(16),
                               child: SizedBox(
                                 height: 300,
-                                child: map()
+                                child: map(mapObj)
                                 ),
                             ))
                             // Expanded(
@@ -209,34 +248,23 @@ class _SingleRideState extends State<SingleRide> {
     );
   }
 
-  map(){
+  Widget map(mapObj){
     return FlutterMap(
+
     options: MapOptions(
       initialCenter: LatLng(51.509364, -0.128928),
       initialZoom: 3.4,
     ),
     
     children: [
-      TileLayer(
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        userAgentPackageName: 'com.example.app',
-      ),
-      PolylineLayer(
-      polylines: [
-      Polyline(
-        points: [LatLng(53.47764, -2.23892), LatLng(51.51408, -0.10648)],
-        color: Colors.red,
-        strokeWidth: 10
-      ),
+            TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c']),
+            PolygonLayer(polygons: mapObj.polygons),
+            PolylineLayer(polylines: mapObj.polylines),
+            MarkerLayer(markers: mapObj.markers)
       ],
-      ),
-      // RichAttributionWidget(
-      //   attributions: [
-      //     TextSourceAttribution(
-      //       'OpenStreetMap contributors',
-      //       onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-      //     ),
-      ],
-      );
+    );
   }
 }
