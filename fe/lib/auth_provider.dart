@@ -11,7 +11,6 @@ class AuthState extends ChangeNotifier {
     _user = user;
     notifyListeners();
   }
-
   void logout(){
     _user = const User();
     notifyListeners();

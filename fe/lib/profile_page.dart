@@ -34,7 +34,6 @@ void initState() {
     }
 }
 
-
 void _handleDelete () async {
   if(_areYouSure){
     deleteUser(userData);
@@ -95,6 +94,8 @@ void _handleDelete () async {
                     child: const Text('Edit Profile')
                 ),
               ),
+              const SizedBox(height: 10),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -130,12 +131,14 @@ void _handleDelete () async {
               itemProfile('Bio', '${userData.bio}', CupertinoIcons.profile_circled),
               const SizedBox(height: 20),
               userData.identity_verification_status ? 
-              itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
+              itemProfile('Licence valid: ', '${userData.identity_verification_status}', CupertinoIcons.check_mark)
               :
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/validatelicence');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
@@ -143,14 +146,15 @@ void _handleDelete () async {
                 ),
               ),
               const SizedBox(height: 20,),
-              // userData.car["tax_due_date"].isNotEmpty
               userData.car != null ?
               carBox(userData.car)
                           :
                           SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/validatecar');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),

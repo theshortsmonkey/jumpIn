@@ -48,6 +48,8 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _doesUserExist = false;
 
   void _showWelcomeScreen() async {
+    final provider = Provider.of<AuthState>(context, listen:false);
+    final currUser = provider.userInfo;
     final userData = User(
       firstName: _firstNameTextController.text,
       lastName: _lastNameTextController.text,
@@ -56,6 +58,9 @@ class _SignUpFormState extends State<SignUpForm> {
       password: _passwordTextController.text,
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
+      identity_verification_status: currUser.identity_verification_status,
+      driver_verification_status: currUser.driver_verification_status,
+      car:currUser.car
     );
     if (widget.submitType == 'post') {
         setState(() {
