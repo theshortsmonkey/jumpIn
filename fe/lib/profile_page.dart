@@ -1,11 +1,10 @@
-import 'dart:html';
 import './login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'classes/get_user_class.dart';
 import 'package:provider/provider.dart';
 import "./auth_provider.dart";
 import './api.dart';
+import "./appbar.dart";
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -45,7 +44,6 @@ void _handleDelete () async {
   _areYouSure = true;
   _deleteButtonText = 'Your account is going to be destroyed! Are you sure?';
 });}
-
   
 }
 
@@ -55,10 +53,17 @@ void _handleDelete () async {
     final imgUrl = "http://localhost:1337/users/${userData.username}/image";
     return context.read<AuthState>().isAuthorized
     ? Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-         title: const Text('jumpIn')
-      ),
+      appBar: CustomAppBar(
+              title: 'jumpIn',
+              onMainPagePressed: () {
+                context.read<AuthState>();
+                Navigator.of(context).pushNamed('/');
+              },
+              onLogoutPressed: () {
+                context.read<AuthState>().logout();
+                Navigator.of(context).pushNamed('/');
+              },
+            ),
       body: 
        _isDeleted
        ?
@@ -110,7 +115,7 @@ void _handleDelete () async {
                   color: isDriver ? Colors.green : Colors.amberAccent,
                   shape: BoxShape.circle,
                   ),
-                child: new CircleAvatar(
+                child:  CircleAvatar(
                     radius: 70,
                     backgroundImage: NetworkImage(imgUrl),
                   ),
