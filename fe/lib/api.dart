@@ -129,7 +129,6 @@ Future fetchCarDetails(carReg) async {
     return (json.decode(response.body));
   } catch (e) {
     throw Exception("Error fetching car details: $e");
-     // or handle the error accordingly
   }
 }
 

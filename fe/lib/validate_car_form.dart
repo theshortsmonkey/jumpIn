@@ -1,38 +1,47 @@
+import 'dart:html';
+
 import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_user_class.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
 
-class ValidateLicenceForm extends StatefulWidget {
+class ValidateCarFrom extends StatefulWidget {
   final String submitType;
-  const ValidateLicenceForm({super.key, required this.submitType});
+  const ValidateCarFrom({super.key, required this.submitType});
 
   @override
-  State<ValidateLicenceForm> createState() => _ValidateLicenceFormState();
+  State<ValidateCarFrom> createState() => _ValidateCarFormState();
 }
 
-class _ValidateLicenceFormState extends State<ValidateLicenceForm> {
-  var _licenceNumberController = TextEditingController(text: '');
-  var _codeController = TextEditingController(text: '');
+class _ValidateCarFormState extends State<ValidateCarFrom> {
+  var _regNumberController = TextEditingController(text: '');
   @override
-  void initState () {
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    _licenceNumberController = TextEditingController();
-    _codeController = TextEditingController();
-    setState(() {});
+      _regNumberController = TextEditingController();
     });
   }
 
-  bool _isCodeValid = true;
-  bool _isLicenceValid = true;
   double _formProgress = 0;
 
-  void _showWelcomeScreen() async {
-    final provider = Provider.of<AuthState>(context, listen:false);
+  void _validateVehicleDetails() async {
+    var regNumber = _regNumberController.text;
+    final provider = Provider.of<AuthState>(context, listen: false);
     final currUser = provider.userInfo;
-    final userData = User(
+    dynamic carData;
+    await fetchCarDetails(regNumber).then((res) {
+      carData = res;
+    });
+    if (carData["taxStatus"] == "Taxed") {
+      final carDetails = {
+        "make":carData["make"],
+        "reg":carData["registrationNumber"],
+        "colour":carData["colour"],
+        "tax_due_date":carData["taxDueDate"]
+      };
+    var userData = User(
       firstName: currUser.firstName,
       lastName: currUser.lastName,
       username: currUser.username,
@@ -40,32 +49,25 @@ class _ValidateLicenceFormState extends State<ValidateLicenceForm> {
       password: currUser.password,
       phoneNumber: currUser.phoneNumber,
       bio: currUser.bio,
-      identity_verification_status: true,
-      driver_verification_status: currUser.driver_verification_status,
-      car:currUser.car
+      identity_verification_status: currUser.identity_verification_status,
+      driver_verification_status: true,
+      car : carDetails
     );
-    if (widget.submitType == 'post') {
-    final postedUser = await postUser(userData);
-    final futureUser = fetchUserByUsername(postedUser.username);
-    futureUser.then((user) {
-      context.read<AuthState>().setUser(user);
-      Navigator.of(context).pushNamed('/');
-    });
-    } else {
       final patchedUser = await patchUser(userData);
       final futureUser = fetchUserByUsername(patchedUser.username);
       futureUser.then((user) {
         context.read<AuthState>().setUser(user);
         Navigator.of(context).pushNamed('/profile');
-      });      
+      });
+    } else {
+      Navigator.of(context).pushNamed('/');
     }
   }
 
   void _updateFormProgress() {
     var progress = 0.0;
     final controllers = [
-      _licenceNumberController,
-      _codeController
+      _regNumberController,
     ];
 
     for (final controller in controllers) {
@@ -81,43 +83,20 @@ class _ValidateLicenceFormState extends State<ValidateLicenceForm> {
 
   @override
   Widget build(BuildContext context) {
-    String titleText = 'Validate Licence';
+    String titleText = 'Validate Car';
     return Form(
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AnimatedProgressIndicator(value: _formProgress), 
+          AnimatedProgressIndicator(value: _formProgress),
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _licenceNumberController,
-              decoration: InputDecoration(
-                labelText: 'Licence Number',
-                errorText: _isLicenceValid ? null : 'Enter a valid UK licence number', 
-                ),
-              onChanged: (value) {
-                final RegExp regex = RegExp(r'[A-Z0-9]{5}\d[0156]\d([0][1-9]|[12]\d|3[01])\d[A-Z0-9]{3}[A-Z]{2}');
-                setState(() {
-                  _isLicenceValid = regex.hasMatch(value);
-                });
-              },
-            ),
-          ),
-            Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _codeController,
-              decoration: InputDecoration(
-                labelText: 'Verification code',
-                errorText: _isCodeValid ? null : 'Enter a valid verification code', 
-                ),
-                onChanged: (value) {
-                final RegExp regex = RegExp(r'[a-zA-Z0-9]{1,8}');
-                setState(() {
-                  _isCodeValid = regex.hasMatch(value);
-                });
-              },
+              controller: _regNumberController,
+              decoration: const InputDecoration(
+                labelText: 'Reg Number',
+              ),
             ),
           ),
           TextButton(
@@ -133,8 +112,7 @@ class _ValidateLicenceFormState extends State<ValidateLicenceForm> {
                     : Colors.blue;
               }),
             ),
-            onPressed:
-            _formProgress > 0.99 ? _showWelcomeScreen : null,
+            onPressed: _formProgress > 0.99 ? _validateVehicleDetails : null,
             child: Text(titleText),
           ),
         ],
@@ -206,6 +184,5 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
         backgroundColor: _colorAnimation.value?.withOpacity(0.4),
       ),
     );
-
   }
 }

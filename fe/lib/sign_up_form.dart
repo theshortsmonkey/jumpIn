@@ -57,7 +57,9 @@ class _SignUpFormState extends State<SignUpForm> {
       password: _passwordTextController.text,
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
-      identity_verification_status: currUser.identity_verification_status
+      identity_verification_status: currUser.identity_verification_status,
+      driver_verification_status: currUser.driver_verification_status,
+      car:currUser.car
     );
     if (widget.submitType == 'post') {
     final postedUser = await postUser(userData);

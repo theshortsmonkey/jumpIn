@@ -60,7 +60,7 @@ Map<String, dynamic> toJson() => {
         "password": password,
         "identity_verification_status" : identity_verification_status,
         "driver_verification_status" : driver_verification_status,
-        // "car" : car,
+        "car" : car,
         // "reports" : reports,
       };
 }

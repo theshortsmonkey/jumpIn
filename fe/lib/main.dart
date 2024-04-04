@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
 import "./validate_licence.dart";
+import "./validate_car.dart";
 
 void main() {
   runApp(const MyApp());
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         '/singleridetest': (context) => const SingleRide(),
         '/editprofile': (context) => const EditProfilePage(),
         '/validatelicence': (context) => const ValidateLicencePage(),
+        '/validatecar': (context) => const ValidateCarPage(),
         }
     )
    );

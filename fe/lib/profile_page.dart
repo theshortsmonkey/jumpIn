@@ -26,9 +26,6 @@ void initState() {
     userData = provider.userInfo;
 }
 
-void _handleValidateLicense () async {
-  
-}
 void _handleDelete () async {
   if(_areYouSure){
     deleteUser(userData);
@@ -139,7 +136,9 @@ void _handleDelete () async {
                           SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/validatecar');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
