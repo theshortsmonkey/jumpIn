@@ -40,10 +40,10 @@ class _PostRideFormState extends State<PostRideForm> {
     print(co2.runtimeType);
     
     final rideData = PostRideClass(
-      to: _startPointTextController.text,
-      to_region: _startRegionTextController.text,
-      from: _endPointTextController.text,
-      from_region: _endRegionTextController.text,
+      to: _endPointTextController.text,
+      to_region: _endRegionTextController.text,
+      from: _startPointTextController.text,
+      from_region: _startRegionTextController.text,
       driver_username: context.read<AuthState>().userInfo.username,
       available_seats: _selectedSeats,
       carbon_emissions: co2,
