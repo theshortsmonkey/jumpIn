@@ -7,6 +7,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 //NEEDS TO BE FIXED - NOT LOADING CURRENTLY
 
@@ -130,11 +132,17 @@ class _SingleRideState extends State<SingleRide> {
         ],
       ),
     );
-  }
+  } 
 
   driverProfile(imgURL, rideData){
     final theme = Theme.of(context);
-
+    Widget deleteButton =  context.read<AuthState>().userInfo.username == rideData.driverUsername ? ElevatedButton(
+      onPressed: (){
+                deleteRide(rideData.id);
+                Navigator.of(context).pushNamed('/allrides');
+              }, 
+      child: Text('Delete Ride')): SizedBox();
+    
     return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
@@ -154,8 +162,11 @@ class _SingleRideState extends State<SingleRide> {
                 backgroundImage: NetworkImage(imgURL),
               ),
               SizedBox(height: 10),
-              FilledButton(onPressed: (){}, child: Text('Message'))
+              FilledButton(onPressed: (){}, child: Text('Message')),
+              SizedBox(height: 10),
+              deleteButton
               ],),
+              
               // Add some spacing between the image and the text
               Container(width: 20),
               // Add an expanded widget to take up the remaining horizontal space
@@ -192,9 +203,10 @@ class _SingleRideState extends State<SingleRide> {
                         Text(
                           "${rideData.driverRating}",
                           style: theme.textTheme.bodyLarge,
-                        )
+                        ),
                       ],
                     ),
+
                     // Add some spacing between the subtitle and the text
                     Container(height: 10),
                     // Add a text widget to display some text

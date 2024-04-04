@@ -165,6 +165,16 @@ Future<String?> uploadUserProfilePic(String username, String filePath) async {
   // }
 }
 
+Future deleteRide(rideId) async {
+  final url = Uri.parse('http://localhost:1337/rides/${rideId}');
+  final response = await http.delete(url);
+  if(response.statusCode == 200) {
+    return null;
+  } else {
+    throw Exception("Failed to delete user account");
+  }
+}
+
 Future fetchDistance(waypoints) async {
   final response = await httpGeoapify.get('?waypoints=$waypoints&mode=drive&apiKey=9ac318b7da314e00b462f8801c758396');
   final distance = response['features'][0]['properties']['distance'];
