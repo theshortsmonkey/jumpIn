@@ -42,11 +42,11 @@ dependencies:
   geocode: ^1.0.3
   provider: ^6.1.2
   http: ^1.2.1
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.1
+  flutter_map_cancellable_tile_provider: ^2.0.0
   email_validator: ^2.1.16
-  image_picker_web: ^3.1.1
   dio: ^5.4.2+1
-  http_parser: ^4.0.2
-  file_picker: ^8.0.0+1
 
 dev_dependencies:
   flutter_test:
