@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './sign_up_form.dart';
+import "./appbar.dart";
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
@@ -7,9 +8,12 @@ class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-      ),
+      appBar: CustomAppBar(
+              title: 'jumpIn',
+              onMainPagePressed: () {
+                Navigator.of(context).pushNamed('/');
+              },
+            ),
       body: const Center(
         child: SingleChildScrollView(
         child: SizedBox(

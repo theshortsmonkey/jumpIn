@@ -51,32 +51,43 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final titleStyleL = theme.textTheme.titleLarge;
+    final titleStyle = theme.textTheme.titleLarge;
+    final isLoggedIn = context.watch<AuthState>().isAuthorized;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  leading: ClipOval(
+    child: Transform.scale(
+      scale:1.6,
+    child: Container(
+      width: 40.0, 
+      height: 40.0,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("../web/icons/logo.png"), 
+          fit: BoxFit.cover,
+          alignment: Alignment(-0.2, -0.2),
+        ),
+      ),
+    ),)
+  ),
          title: Text(widget.title),
                 actions: [
                 IconButton(
                 icon : const Icon(Icons.verified_user),
                 onPressed:_setDefaultUser ,
                 ),
+                if(isLoggedIn)
                 IconButton(
                 icon : const Icon(Icons.account_box_outlined),
                 onPressed:_showProfilePage ,
                 ),
-                IconButton(
-                icon : const Icon(Icons.car_rental),
-                onPressed:_showRidesPage ,
-                ),
+                if(!isLoggedIn)
                 IconButton(
                 icon : const Icon(Icons.login),
                 onPressed:_showLoginPage ,
                 ),
-                IconButton(
-                icon : const Icon(Icons.report),
-                onPressed:_showSignUpScreen ,
-                ),
+                if(isLoggedIn)
                 IconButton(
                 icon : const Icon(Icons.logout),
                 onPressed:_handleLogout ,
@@ -87,33 +98,51 @@ class _MyHomePageState extends State<MyHomePage> {
           )
       ],
       ),
-      body: Center(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("../web/background/background.png"), 
+            fit: BoxFit.cover, 
+          ),
+        ),
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FilledButton(
                 style:FilledButton.styleFrom(
-                  minimumSize: const Size(400, 200)
+                  minimumSize: const Size(200, 100),
+                  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50), 
+      side: const BorderSide(color: Colors.white, width:4),
+    ),
                 ),
-            onPressed:_showSignUpScreen,
+                // if logged in show rides page, if not show sign up page
+            onPressed:isLoggedIn ? _showRidesPage : _showSignUpScreen,
             child: Text(
               'Find a ride',
-              style: theme.textTheme.displayMedium),
+              style: titleStyle),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height:30),
+            //only if logged in show the post rides
+            if (isLoggedIn) 
             ElevatedButton(
                style:ElevatedButton.styleFrom(
-                  minimumSize: const Size(400, 200)
+                  minimumSize: const Size(200, 100),
+                  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50),
+      side: const BorderSide(color: Color.fromARGB(255, 0, 78, 3), width:4),
+       ),
                 ),
             onPressed:_showPostRideScreen,
             child: Text(
               'Post a ride',
-              style: theme.textTheme.displayMedium
+              style: titleStyle
             ),
             )
-          ],
+          ]
         ),
       ),
-    );
+    ));
   }
 }
