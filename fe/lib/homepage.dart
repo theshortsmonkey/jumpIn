@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import './api.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
@@ -99,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
       ),
       body: Container(
+        alignment: Alignment.topCenter,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("../web/background/background.png"), 
@@ -109,6 +111,28 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(
+              width: 350,
+              child: Column(
+                children: [
+            const Text(
+                'Trust who you travel with',
+                style: TextStyle(
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'We take the time to get to know each of our members and bus partners. We check reviews, profiles and IDs, so you know who you’re travelling with and can book your ride at ease on our secure platform.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                ),
+              ),
+              const SizedBox(height: 30),
+              ],)
+            ),
             FilledButton(
                 style:FilledButton.styleFrom(
                   minimumSize: const Size(200, 100),
