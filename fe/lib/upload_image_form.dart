@@ -15,19 +15,29 @@ class UploadImageForm extends StatefulWidget {
 class _UploadImageForm extends State<UploadImageForm> {
   final _imageUrlController = TextEditingController();
   String _imageUrl = '';
+  bool _isWebImage = false;
   
   void _handleUploadPic() async {  
     try {
     final currUser = context.read<AuthState>().userInfo;
-      final uploadResponse = await uploadUserProfilePic(currUser.username,_imageUrlController.text);
-    print(uploadResponse);
-    // Navigator.of(context).pushNamed('/profile');
+      await uploadUserProfilePic(currUser.username,_imageUrlController.text);
+      await Future.delayed(const Duration(seconds: 1), () async {
+        final futureUser = await fetchUserByUsername(currUser.username);
+        context.read<AuthState>().setUser(futureUser);
+        imageCache.clear();
+        imageCache.clearLiveImages();
+        Navigator.of(context).pushNamed('/profile');
+    });
     } catch (e) {
       print(e);
-      setState(() {
-        // _isUserExist = false;
-      });
     }
+  }
+  ImageProvider? _setImage () {
+    ImageProvider? profilePic;
+    _isWebImage 
+                  ? _imageUrl != '' ? profilePic = NetworkImage(_imageUrl): null
+                  : _imageUrl != '' ? profilePic = AssetImage(_imageUrl): null;
+    return profilePic;
   }
   @override
   Widget build(BuildContext context) {
@@ -41,9 +51,12 @@ class _UploadImageForm extends State<UploadImageForm> {
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _imageUrlController,
-              decoration: const InputDecoration(labelText: 'image url'),
+              decoration: const InputDecoration(labelText: 'image url/filepath'),
               onChanged: (value) {
               setState(() {
+                _imageUrlController.text.startsWith('http') 
+                ? _isWebImage = true 
+                : _isWebImage = false;
                 _imageUrl = _imageUrlController.text;
               });
               },
@@ -52,7 +65,7 @@ class _UploadImageForm extends State<UploadImageForm> {
               const SizedBox(height: 40),
               CircleAvatar(
                 radius: 70,
-                backgroundImage: _imageUrl != '' ? AssetImage(_imageUrl) : null,
+                backgroundImage: _setImage()
               ),
           TextButton(
             style: ButtonStyle(
