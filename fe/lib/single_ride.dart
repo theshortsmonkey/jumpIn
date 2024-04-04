@@ -7,6 +7,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import "./auth_provider.dart";
+import 'package:provider/provider.dart';
 
 //NEEDS TO BE FIXED - NOT LOADING CURRENTLY
 
@@ -138,37 +140,89 @@ class _SingleRideState extends State<SingleRide> {
         ],
       ),
     );
-  }
+  } 
 
   driverProfile(imgURL, rideData) {
     final theme = Theme.of(context);
-
+    Widget deleteButton =  context.read<AuthState>().userInfo.username == rideData.driverUsername ? ElevatedButton(
+      onPressed: (){
+                deleteRide(rideData.id);
+                Navigator.of(context).pushNamed('/allrides');
+              }, 
+      child: Text('Delete Ride')): SizedBox();
+    
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Column(
-                  children: [
-                    new CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(imgURL),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Column(children: [
+                new CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(imgURL),
+              ),
+              SizedBox(height: 10),
+              FilledButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                    .pushNamed('/ridechat', arguments: rideId);
+                  },
+                , child: Text('Message')),
+              SizedBox(height: 10),
+              deleteButton
+              ],),
+              
+              // Add some spacing between the image and the text
+              Container(width: 20),
+              // Add an expanded widget to take up the remaining horizontal space
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Add some spacing between the top of the card and the title
+                    Container(height: 5),
+                    // Add a title widget
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Driver:",
+                          style: theme.textTheme.headlineSmall
+                          ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${rideData.driverUsername}',
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    FilledButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed('/ridechat', arguments: rideId);
-                        },
-                        child: Text('Message'))
+                    // Add a subtitle widget
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                        "Rating:",
+                        style: theme.textTheme.headlineSmall,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "${rideData.driverRating}",
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+
+                    // Add some spacing between the subtitle and the text
+                    Container(height: 10),
+                    // Add a text widget to display some text
                   ],
                 ),
                 // Add some spacing between the image and the text
