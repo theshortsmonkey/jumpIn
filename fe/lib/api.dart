@@ -47,7 +47,6 @@ Future<List<Ride>> fetchRides({
 
 
   final url = Uri.http('localhost:1337', '/rides', queryParams);
-  print(url);
   final response = await http.get(url);
   if (response.body.isNotEmpty) {
     final responseData = json.decode(response.body);
@@ -200,7 +199,6 @@ Future<Ride> postRide(ride) async {
   String json = jsonEncode(ride);
   final response = await http.post(Uri.parse('http://localhost:1337/rides'), headers: {"Content-Type": "application/json"},body: json);
   if(response.statusCode == 200) {
-        print('Im in future');
    var rideResponse = Ride.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   
     return rideResponse;
@@ -211,7 +209,6 @@ Future<Ride> postRide(ride) async {
 }
 
 Future<List<Message>> fetchMessagesByUsername(username) async {
-  print('start');
   final response = await httpEnhanced.get('/rides/$username/messages');
 
   if (response.isNotEmpty) {
@@ -225,13 +222,11 @@ Future<List<Message>> fetchMessagesByUsername(username) async {
 }
 
 Future<List<Chat>> fetchMessagesByRideId(ride_id, username) async {
-  print('start');
   final response = await httpEnhanced.get('/rides/$ride_id/$username/messages');
   if (response.isNotEmpty) {
     List<Chat> chats = response.map<Chat>((item) {
       return Chat.fromJson(item as Map<String, dynamic>);
     }).toList();
-    print(chats);
     return chats;
   } else {
     throw Exception('No users found');
@@ -240,7 +235,6 @@ Future<List<Chat>> fetchMessagesByRideId(ride_id, username) async {
 
 Future<Message> postMessage(inputMessage, chatId) async {
   String json = jsonEncode(inputMessage);
-  print(json);
   final response = await http.post(Uri.parse('http://localhost:1337/rides/${chatId}/messages'),
       headers: {"Content-Type": "application/json"}, body: json);
   if (response.statusCode == 200) {

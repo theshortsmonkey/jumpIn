@@ -29,7 +29,6 @@ class _SingleRideState extends State<SingleRide> {
     super.didChangeDependencies();
     if (rideId.isEmpty) {
       rideId = ModalRoute.of(context)!.settings.arguments as String;
-      print(rideId);
       futureRide = fetchRideById(rideId); //pass rideId
     }
   }
@@ -175,10 +174,11 @@ class _SingleRideState extends State<SingleRide> {
                     Navigator.of(context)
                     .pushNamed('/ridechat', arguments: rideId);
                   },
-                , child: Text('Message')),
+                child: Text('Message')),
               SizedBox(height: 10),
               deleteButton
-              ],),
+              ],
+              ),
               
               // Add some spacing between the image and the text
               Container(width: 20),
@@ -225,6 +225,7 @@ class _SingleRideState extends State<SingleRide> {
                     // Add a text widget to display some text
                   ],
                 ),
+              ),
                 // Add some spacing between the image and the text
                 Container(width: 20),
                 // Add an expanded widget to take up the remaining horizontal space

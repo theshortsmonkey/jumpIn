@@ -9,10 +9,6 @@ class TestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Ride postedRide = ModalRoute.of(context)!.settings.arguments as Ride;
-    //final postedRide = Ride.fromJson(postedRideObj);
-
-    print(postedRide.id);
-    //print(postedRide.runtimeType);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

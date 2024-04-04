@@ -63,8 +63,6 @@ class _GetRideChatState extends State<GetRideChat> {
                 "to": "testUSername27",
                 "message": _msgTextController.text 
               };
-              print(message);
-              print(chatId);
               fetchMessagesByRideId(chatId, userData.username);
               _postMessage(message, chatId);
               

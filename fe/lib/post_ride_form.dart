@@ -37,7 +37,6 @@ class _PostRideFormState extends State<PostRideForm> {
     final carReg = _carRegTextController.text;
     final carDetails = await fetchCarDetails(carReg);
     final co2 = carDetails['co2Emissions'];
-    print(co2.runtimeType);
     
     final rideData = PostRideClass(
       to: _endPointTextController.text,
@@ -214,7 +213,6 @@ class _PostRideFormState extends State<PostRideForm> {
               onChanged: (int? newValue) {
                 setState(() {
                   _selectedSeats = newValue;
-                  print(_selectedSeats);
                 });
               },
               items: [1, 2, 3, 4, 5].map<DropdownMenuItem<int>>((int value) {
@@ -230,7 +228,6 @@ class _PostRideFormState extends State<PostRideForm> {
             calculatePrice(_carRegTextController.text).then((price){
               setState((){
               _calculatedPrice = price;
-              print(_calculatedPrice);
               });
             });
             },
