@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_user_class.dart';
@@ -39,7 +37,9 @@ class _ValidateCarFormState extends State<ValidateCarFrom> {
         "make":carData["make"],
         "reg":carData["registrationNumber"],
         "colour":carData["colour"],
-        "tax_due_date":carData["taxDueDate"]
+        "tax_due_date":carData["taxDueDate"],
+        "fuel_type":carData["fuelType"],
+        "co2_emissions":carData["co2Emissions"]
       };
     var userData = User(
       firstName: currUser.firstName,
