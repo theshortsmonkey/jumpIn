@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './api.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
+
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -14,30 +16,21 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   bool _isPasswordObscured = true;
-
   double _formProgress = 0;
+  bool _isUserExist = true;
   
   void _handleLogin() async {  
     try {
-
       final futureUser = await fetchUserByUsername(_usernameTextController.text);
-    print('before');
-    print(futureUser);
-    print('after');
-
     final provider = Provider.of<AuthState>(context, listen:false);
-    // final currUser = provider.userInfo;
     provider.setUser(futureUser);
-    print(provider.userInfo);
-    // Navigator.of(context).pushNamed('/');
+    Navigator.of(context).pushNamed('/');
     } catch (e) {
-      print(e);
+      setState(() {
+        _isUserExist = false;
+      });
     }
-  // futureUser.then((user) {
-  // }).catchError((e) {
-  //   print('test');
-  // });
-}
+  }
   
   void _showSignupPage() {
     Navigator.of(context).pushNamed('/signup', );
@@ -68,7 +61,41 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return !_isUserExist 
+    ?
+    Scaffold(
+      body:
+    Center(
+        child: SingleChildScrollView(
+        child: SizedBox(
+          width: 400,
+          child: Column(
+            children: [
+              itemProfile('Username does not exist','' ,CupertinoIcons.person_badge_minus),
+            TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.resolveWith((states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : Colors.white;
+              }),
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : Colors.blue;
+              }),
+            ),
+            onPressed:_showSignupPage,
+            child: const Text('You can Sign up here'),
+          ),
+          ],
+          ),
+        ),
+        ),
+      )
+      )
+    :
+    Form(
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -130,6 +157,28 @@ class _LoginFormState extends State<LoginForm> {
             child: const Text('Sign up'),
           ),
         ],
+      ),
+    );
+  }
+itemProfile(String title, String subtitle, IconData iconData) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                offset: Offset(0, 5),
+                color: Colors.deepOrange.withOpacity(.2),
+                spreadRadius: 2,
+                blurRadius: 10
+            )
+          ]
+      ),
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(subtitle),
+        leading: Icon(iconData),
+        tileColor: Colors.white,
       ),
     );
   }

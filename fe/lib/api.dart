@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:enhanced_http/enhanced_http.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_ride_class.dart';
@@ -6,6 +7,8 @@ import 'dart:async';
 import "./classes/get_user_class.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
+import 'package:dio/dio.dart' as dio_http;
+import 'package:http_parser/http_parser.dart';
 
 EnhancedHttp httpEnhanced = EnhancedHttp(baseURL: 'http://localhost:1337');
 EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
@@ -45,13 +48,11 @@ Future<List<User>> fetchUsers() async {
 }
 
 Future<User> fetchUserByUsername(username) async {
-  print('start');
+  try{
   final response = await httpEnhanced.get('/users/$username');
-  print(response);
-  if (response.isNotEmpty) {
    var user = User.fromJson(response as Map<String, dynamic>);
       return user;
-  } else {
+  } catch (e) {
     throw Exception('No users found');
   }
 }
@@ -64,7 +65,7 @@ Future<User> postUser(user) async {
     return user;
   }
   else{
-  throw Exception("User not found");
+  throw Exception(response.body);
   }
 }
 
@@ -73,8 +74,6 @@ Future<User> patchUser(user) async {
   String uri = 'http://localhost:1337/users/${user.username}';
   final response = await http.patch(Uri.parse(uri), headers: {"Content-Type": "application/json"},body: json);
   if(response.statusCode == 200) {
-  //  var user = User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-  //   return user;
     List<User> users = jsonDecode(response.body).map<User>((item) {
       return User.fromJson(item as Map<String, dynamic>);
     }).toList();
@@ -83,6 +82,49 @@ Future<User> patchUser(user) async {
   else{
   throw Exception("User not found");
   }
+}
+
+Future<User?>deleteUser(user) async {
+  final uri = Uri.parse("http://localhost:1337/users/${user.username}");
+  final response = await http.delete(uri);
+
+  if(response.statusCode == 200) {
+    return null;
+  } else {
+    throw Exception("Failed to delete user account");
+  }
+}
+
+//upload image for user
+Future<String?> uploadUserProfilePic(String username, String filePath) async {
+  // final file = File(filePath);
+  // dio_http.FormData formData = dio_http.FormData.fromMap({
+  // 'file': await dio_http.MultipartFile.fromFile(
+  //   file.path, filename:  file.path.split('/').last,
+  //   contentType: MediaType("image", "jpeg"),
+  // ),
+  // });
+  // dio_http.Dio dio = new dio_http.Dio();
+  // print('in api call');
+  // // final response = await dio.post('http://localhost:1337/users/${username}/image',data: formData);
+  // final uri = Uri.parse("http://localhost:1337/users/${username}/image");
+  // FileList files = List(filePath);
+  // final fileName = filePath.split('/').last;
+  // File file = File(files,fileName);
+  // var request = http.MultipartRequest('POST', uri);
+  // print('test');
+  // request.files.add(http.MultipartFile.fromPath('file', file.path));
+  // request.files.add(await http.MultipartFile.fromPath('file', '/home/theshortsmonkey/northcoders/projects/jumpIn/fe/tmp/kermit-70118_1280.jpg'));
+  // print(request);
+  
+  // var response = await request.send();
+  // if (response.statusCode == 200) {
+  //   print('upload successful');
+  //   return 'good';
+  // } else {
+  //   print('upload failed');
+  //   return 'bad';
+  // }
 }
 
 Future fetchDistance(waypoints) async {
@@ -104,8 +146,6 @@ Future fetchFuelPrice(fuelType) async {
   } else {
     fuelPrice = response["stations"][0]['prices']['B7']; //diesel price
   }
-
-  print(fuelPrice);
   return fuelPrice;
 }
 
@@ -121,11 +161,9 @@ Future fetchCarDetails(carReg) async {
       },
       body: jsonEncode({'registrationNumber': carReg}),
     ); 
-    print(json.decode(response.body));
     return (json.decode(response.body));
   } catch (e) {
     throw Exception("Error fetching car details: $e");
-     // or handle the error accordingly
   }
 }
 

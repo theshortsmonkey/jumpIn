@@ -7,9 +7,47 @@ import 'package:provider/provider.dart';
 import "./auth_provider.dart";
 import './api.dart';
 
-
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen>{
+bool isDriver = false;
+bool _isDeleted = false;
+bool _areYouSure = false;
+String _deleteButtonText ='Delete your account';
+dynamic userData;
+@override
+void initState() {
+  super.initState();
+    final provider = Provider.of<AuthState>(context, listen:false);
+    userData = provider.userInfo;
+    if (userData.identity_verification_status && userData.driver_verification_status) {
+      isDriver = true;
+    }
+}
+
+void _handleDelete () async {
+  if(_areYouSure){
+    deleteUser(userData);
+  setState(() {
+    _isDeleted = true;
+  });
+  await Future.delayed(const Duration(seconds: 5), () {
+    context.read<AuthState>().logout();
+    Navigator.of(context).pushNamed('/');
+  });
+  }else{
+  setState(() {
+  _areYouSure = true;
+  _deleteButtonText = 'Your account is going to be destroyed! Are you sure?';
+});}
+
+  
+}
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +59,21 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
          title: const Text('jumpIn')
       ),
-      body: Padding(
+      body: 
+       _isDeleted
+       ?
+      Center(
+        child: SingleChildScrollView(
+        child: SizedBox(
+          width: 400,
+          child: Column(
+            children: [itemProfile('Account Deleted','' ,CupertinoIcons.person_badge_minus)],
+          ),
+        ),
+        ),
+      )
+       :
+      Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
@@ -38,10 +90,30 @@ class ProfileScreen extends StatelessWidget {
                     child: const Text('Edit Profile')
                 ),
               ),
-              const SizedBox(height: 40),
-              new CircleAvatar(
-                radius: 70,
-                backgroundImage: NetworkImage(imgUrl),
+              const SizedBox(height: 10),
+
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: ElevatedButton(
+              //       onPressed: () {
+              //         Navigator.of(context).pushNamed('/uploadProfilePic');
+              //       },
+              //       style: ElevatedButton.styleFrom(
+              //         padding: const EdgeInsets.all(15),
+              //       ),
+              //       child: const Text('Upload Profile Picture')
+              //   ),
+              // ),
+              Container(
+                padding: EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: isDriver ? Colors.green : Colors.amberAccent,
+                  shape: BoxShape.circle,
+                  ),
+                child: new CircleAvatar(
+                    radius: 70,
+                    backgroundImage: NetworkImage(imgUrl),
+                  ),
               ),
               const SizedBox(height: 20),
               itemProfile('Name Lastname', '${userData.firstName} ${userData.lastName}', CupertinoIcons.person),
@@ -55,12 +127,14 @@ class ProfileScreen extends StatelessWidget {
               itemProfile('Bio', '${userData.bio}', CupertinoIcons.profile_circled),
               const SizedBox(height: 20),
               userData.identity_verification_status ? 
-              itemProfile('Licence valid: ', '${userData.bio}', CupertinoIcons.check_mark)
+              itemProfile('Licence valid: ', '${userData.identity_verification_status}', CupertinoIcons.check_mark)
               :
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/validatelicence');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
@@ -68,20 +142,31 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20,),
-              // userData.car["tax_due_date"].isNotEmpty
               userData.car != null ?
               carBox(userData.car)
                           :
                           SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/validatecar');
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
                     child: const Text('Validate vehicle')
                 ),
-          )
+          ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: _handleDelete,
+                    style:ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: Text(_deleteButtonText)
+                )
+              ),
           ]
           ),
         )
