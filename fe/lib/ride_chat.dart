@@ -28,8 +28,9 @@ class _GetRideChatState extends State<GetRideChat> {
     futureRideChats = fetchMessagesByRideId(chatId, currUser.username);
     rideDetails = fetchRideById(chatId);
   }
-  void _postMessage(message, chatId){
-    postMessage(message, chatId);
+  void _postMessage(message, chatId, username) async {
+    await postMessage(message, chatId);
+    await fetchMessagesByRideId(chatId, username);
     setState((){
       _chats = futureRideChats;
     });
@@ -60,11 +61,14 @@ class _GetRideChatState extends State<GetRideChat> {
             FilledButton(onPressed: () {
               final message = {
                 "from": userData.username,
-                "to": "testUSername27",
+                "to": "testUSername2",
                 "message": _msgTextController.text 
               };
-              fetchMessagesByRideId(chatId, userData.username);
-              _postMessage(message, chatId);
+              _postMessage(message, chatId,userData.username);
+              // fetchMessagesByRideId(chatId, userData.username);
+              // setState((){
+              //   _chats = futureRideChats;
+              // });
               
               //post message(_msgTextController, )
             }, child: Text('Send'))
