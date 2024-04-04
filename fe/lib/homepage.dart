@@ -15,7 +15,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   void _setDefaultUser() async {
-    final futureUser = fetchUserByUsername('testUSername2');
+    final futureUser = fetchUserByUsername('testUSername4');
     futureUser.then((user) {
     context.read<AuthState>().setUser(user);
       Navigator.of(context).pushNamed('/profile');

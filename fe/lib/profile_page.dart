@@ -90,8 +90,7 @@ void _handleDelete () async {
                     child: const Text('Edit Profile')
                 ),
               ),
-              const SizedBox(height: 10),
-
+              // const SizedBox(height: 10),
               // SizedBox(
               //   width: double.infinity,
               //   child: ElevatedButton(
@@ -104,6 +103,7 @@ void _handleDelete () async {
               //       child: const Text('Upload Profile Picture')
               //   ),
               // ),
+              const SizedBox(height: 20),
               Container(
                 padding: EdgeInsets.all(7),
                 decoration: BoxDecoration(
@@ -157,6 +157,7 @@ void _handleDelete () async {
                     child: const Text('Validate vehicle')
                 ),
           ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -183,7 +184,7 @@ void _handleDelete () async {
           boxShadow: [
             BoxShadow(
                 offset: Offset(0, 5),
-                color: Colors.deepOrange.withOpacity(.2),
+                color: Colors.lightGreen.withOpacity(.2),
                 spreadRadius: 2,
                 blurRadius: 10
             )
@@ -212,7 +213,7 @@ void _handleDelete () async {
           boxShadow: [
             BoxShadow(
                 offset: Offset(0, 5),
-                color: Colors.deepOrange.withOpacity(.2),
+                color: Colors.lightGreen.withOpacity(.2),
                 spreadRadius: 2,
                 blurRadius: 10
             )
