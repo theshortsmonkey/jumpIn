@@ -22,7 +22,7 @@ class SingleRide extends StatefulWidget {
 
 class _SingleRideState extends State<SingleRide> {
   late Future<Ride> futureRide;
-  late String rideId ='';
+  late String rideId = '';
 
   @override
   void didChangeDependencies() {
@@ -42,11 +42,10 @@ class _SingleRideState extends State<SingleRide> {
     final titleStyleM = theme.textTheme.titleMedium;
     final titleStyleS = theme.textTheme.titleSmall;
     List<LatLng> polylinePoints = [
-      LatLng(53.47764, -2.23892),//start
+      LatLng(53.47764, -2.23892), //start
       LatLng(51.51408, -0.10648), //end
     ];
 
-    
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -61,7 +60,8 @@ class _SingleRideState extends State<SingleRide> {
                 return Text('Error: ${snapshot.error}');
               } else if (snapshot.hasData) {
                 final rideData = snapshot.data;
-                final String imgURL = 'http://localhost:1337/users/${rideData?.driverUsername}/image';
+                final String imgURL =
+                    'http://localhost:1337/users/${rideData?.driverUsername}/image';
                 // Use ListView.builder to loop through snapshot.data and render a card for each ride
                 return Column(
                   children: [
@@ -76,26 +76,39 @@ class _SingleRideState extends State<SingleRide> {
                           children: [
                             IntrinsicWidth(
                               child: Column(
-                                
                                 children: [
-                                  itemProfile('Start', '${rideData?.from}', CupertinoIcons.arrow_right_circle),
-                                  itemProfile('End', '${rideData?.to}', CupertinoIcons.flag_circle_fill),
-                                  itemProfile('Date', '${rideData?.dateTime?.substring(0,10)}', CupertinoIcons.calendar_today),
-                                  itemProfile('Time', '${rideData?.dateTime?.substring(11,16)}', CupertinoIcons.clock),
-                                  itemProfile('Available Seats', '${rideData?.availableSeats}', CupertinoIcons.person_2),
-                                  itemProfile('Price', '${rideData?.price}', CupertinoIcons.money_pound_circle),
-                                  itemProfile('Total Carbon', '${rideData?.carbonEmissions}', CupertinoIcons.leaf_arrow_circlepath),
-                              ],),
+                                  itemProfile('Start', '${rideData?.from}',
+                                      CupertinoIcons.arrow_right_circle),
+                                  itemProfile('End', '${rideData?.to}',
+                                      CupertinoIcons.flag_circle_fill),
+                                  itemProfile(
+                                      'Date',
+                                      '${rideData?.dateTime?.substring(0, 10)}',
+                                      CupertinoIcons.calendar_today),
+                                  itemProfile(
+                                      'Time',
+                                      '${rideData?.dateTime?.substring(11, 16)}',
+                                      CupertinoIcons.clock),
+                                  itemProfile(
+                                      'Available Seats',
+                                      '${rideData?.availableSeats}',
+                                      CupertinoIcons.person_2),
+                                  itemProfile('Price', '${rideData?.price}',
+                                      CupertinoIcons.money_pound_circle),
+                                  itemProfile(
+                                      'Total Carbon',
+                                      '${rideData?.carbonEmissions}',
+                                      CupertinoIcons.leaf_arrow_circlepath),
+                                ],
+                              ),
                             ),
-                            Expanded(child: Padding(
+                            Expanded(
+                                child: Padding(
                               padding: const EdgeInsets.all(16),
-                              child: SizedBox(
-                                height: 300,
-                                child: map()
-                                ),
+                              child: SizedBox(height: 300, child: map()),
                             ))
                             // Expanded(
-                            //   child: 
+                            //   child:
                             // ),
                           ],
                         ),
@@ -104,7 +117,6 @@ class _SingleRideState extends State<SingleRide> {
                     SizedBox(width: 10),
                     driverProfile(imgURL, rideData),
                   ],
-                
                 );
               } else {
                 return Text('No data');
@@ -122,19 +134,15 @@ class _SingleRideState extends State<SingleRide> {
         children: [
           Icon(iconData),
           const SizedBox(width: 10),
-          Text(title,
-            style: theme.textTheme.headlineSmall
-          ),
+          Text(title, style: theme.textTheme.headlineSmall),
           const SizedBox(width: 8),
-          Text(subtitle,
-            style: theme.textTheme.bodyLarge
-          )
+          Text(subtitle, style: theme.textTheme.bodyLarge)
         ],
       ),
     );
   } 
 
-  driverProfile(imgURL, rideData){
+  driverProfile(imgURL, rideData) {
     final theme = Theme.of(context);
     Widget deleteButton =  context.read<AuthState>().userInfo.username == rideData.driverUsername ? ElevatedButton(
       onPressed: (){
@@ -162,7 +170,12 @@ class _SingleRideState extends State<SingleRide> {
                 backgroundImage: NetworkImage(imgURL),
               ),
               SizedBox(height: 10),
-              FilledButton(onPressed: (){}, child: Text('Message')),
+              FilledButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                    .pushNamed('/ridechat', arguments: rideId);
+                  },
+                , child: Text('Message')),
               SizedBox(height: 10),
               deleteButton
               ],),
@@ -212,43 +225,82 @@ class _SingleRideState extends State<SingleRide> {
                     // Add a text widget to display some text
                   ],
                 ),
-              ),
-            ],
+                // Add some spacing between the image and the text
+                Container(width: 20),
+                // Add an expanded widget to take up the remaining horizontal space
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // Add some spacing between the top of the card and the title
+                      Container(height: 5),
+                      // Add a title widget
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Driver:", style: theme.textTheme.headlineSmall),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${rideData.driverUsername}',
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
+                      // Add a subtitle widget
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Rating:",
+                            style: theme.textTheme.headlineSmall,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "${rideData.driverRating}",
+                            style: theme.textTheme.bodyLarge,
+                          )
+                        ],
+                      ),
+                      // Add some spacing between the subtitle and the text
+                      Container(height: 10),
+                      // Add a text widget to display some text
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 
-  map(){
+  map() {
     return FlutterMap(
-    options: MapOptions(
-      initialCenter: LatLng(51.509364, -0.128928),
-      initialZoom: 3.4,
-    ),
-    
-    children: [
-      TileLayer(
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        userAgentPackageName: 'com.example.app',
+      options: MapOptions(
+        initialCenter: LatLng(51.509364, -0.128928),
+        initialZoom: 3.4,
       ),
-      PolylineLayer(
-      polylines: [
-      Polyline(
-        points: [LatLng(53.47764, -2.23892), LatLng(51.51408, -0.10648)],
-        color: Colors.red,
-        strokeWidth: 10
-      ),
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.app',
+        ),
+        PolylineLayer(
+          polylines: [
+            Polyline(points: [
+              LatLng(53.47764, -2.23892),
+              LatLng(51.51408, -0.10648)
+            ], color: Colors.red, strokeWidth: 10),
+          ],
+        ),
+        // RichAttributionWidget(
+        //   attributions: [
+        //     TextSourceAttribution(
+        //       'OpenStreetMap contributors',
+        //       onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+        //     ),
       ],
-      ),
-      // RichAttributionWidget(
-      //   attributions: [
-      //     TextSourceAttribution(
-      //       'OpenStreetMap contributors',
-      //       onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-      //     ),
-      ],
-      );
+    );
   }
 }

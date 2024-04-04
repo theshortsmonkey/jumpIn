@@ -238,9 +238,10 @@ Future<List<Chat>> fetchMessagesByRideId(ride_id, username) async {
   }
 }
 
-Future<Message> postMessage(message) async {
-  String json = jsonEncode(message);
-  final response = await http.post(Uri.parse('http://localhost:1337/rides/${message.id}/messages'),
+Future<Message> postMessage(inputMessage, chatId) async {
+  String json = jsonEncode(inputMessage);
+  print(json);
+  final response = await http.post(Uri.parse('http://localhost:1337/rides/${chatId}/messages'),
       headers: {"Content-Type": "application/json"}, body: json);
   if (response.statusCode == 200) {
     var message = Message.fromJson(jsonDecode(response.body) as Map<String, dynamic>);

@@ -1,7 +1,8 @@
-import 'package:fe/api.dart';
+/*import 'package:fe/api.dart';
 import 'package:flutter/material.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
+import './classes/get_chat_class.dart';
 
 class SendMessageForm extends StatefulWidget {
   final String submitType;
@@ -13,23 +14,29 @@ class SendMessageForm extends StatefulWidget {
 
 class _SendMessageFormState extends State<SendMessageForm> {
   var _message = TextEditingController(text: '');
+
   @override
   void initState () {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     final provider = Provider.of<AuthState>(context, listen:false);
     final currUser = provider.userInfo;
-    _message = TextEditingController(text: currUser.bio);
     setState(() {});
+
     });
   }
 void _showRideChatScreen() async {
-    final messageData = Message(
+  final provider = Provider.of<AuthState>(context, listen:false);
+    final currUser = provider.userInfo;
+    final messageData = Chat(
       message: _message.text,
+      to: _to.text,
+      from: currUser.username
+
       
     );
     if (widget.submitType == 'post') {
-    final postedMessage = await postMessage(messageData);
+    final postedMessage = await postMessage(messageData, id);
     final futureMessage = fetchMessagesByRideId(postedMessage.id);
     futureMessage.then((message) {
       context.read<AuthState>().setMessage(message);
@@ -45,19 +52,15 @@ void _showRideChatScreen() async {
     ? titleText = 'Send message';
   
     return Form(
-      onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AnimatedProgressIndicator(value: _formProgress), 
           Padding(
             padding: const EdgeInsets.all(8),
             child: TextFormField(
-              controller: _messageTextController,
+              controller: _message,
               decoration: InputDecoration(
-                labelText: 'Message',
-                errorMaxLines: 3,
-                errorText: _isMessageNameValid ? null : 'Enter valid message: cannot be empty'
+                labelText: 'Message'
                 ),
             ),
           ),
@@ -76,7 +79,7 @@ void _showRideChatScreen() async {
               }),
             ),
             onPressed:
-            _formProgress > 0.99 ? _showRideChatScreen : null,
+            _showRideChatScreen,
             child: Text(titleText),
           ),
         ],
@@ -150,4 +153,4 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
     );
 
   }
-}
+}*/
