@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         // other providers
       ],
       builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
       title: 'jumpIn',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),

@@ -111,20 +111,26 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              width: 350,
+            SizedBox(
+              width: 500,
               child: Column(
                 children: [
-            const Text(
+             Text(
                 'Trust who you travel with',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
+                  background: Paint()
+                    ..strokeWidth = 60.0
+                    ..color = Colors.green
+                    ..style = PaintingStyle.stroke
+                    ..strokeJoin = StrokeJoin.round,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 40),
               const Text(
-                'We take the time to get to know each of our members and bus partners. We check reviews, profiles and IDs, so you know who you’re travelling with and can book your ride at ease on our secure platform.',
+                'We take the time to get to know each of our members. We check reviews, profiles and IDs, so you know who you’re travelling with and can book your ride at ease on our platform.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
