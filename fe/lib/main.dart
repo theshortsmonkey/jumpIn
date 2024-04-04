@@ -9,9 +9,11 @@ import "post_ride_page.dart";
 import "./test_page.dart";
 import './all_rides.dart';
 import './single_ride.dart';
+import './inbox.dart';
 import 'package:google_fonts/google_fonts.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
+import './ride_chat.dart';
 
 
 void main() {
@@ -60,7 +62,9 @@ class MyApp extends StatelessWidget {
         "/test": (context) => const TestPage(),
         "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide(),
-        '/editprofile': (context) => const EditProfilePage()
+        '/editprofile': (context) => const EditProfilePage(),
+        '/inbox': (context) => const GetMessage(),
+        '/ridechat': (context) => const GetRideChat()
         }
     )
    );
