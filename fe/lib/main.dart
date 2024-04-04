@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
         '/singleridetest': (context) => const SingleRide(),
         '/editprofile': (context) => const EditProfilePage(),
         '/inbox': (context) => const GetMessage(),
-        '/ridechat': (context) => const GetRideChat()
+        '/ridechat': (context) => const GetRideChat(),
         '/uploadProfilePic': (context) => const UploadProfilePic(),
         '/validatelicence': (context) => const ValidateLicencePage(),
         '/validatecar': (context) => const ValidateCarPage(),

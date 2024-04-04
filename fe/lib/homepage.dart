@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 IconButton(
                 icon : const Icon(Icons.logout),
                 onPressed:_handleLogout ,
-                )
+                ),
           IconButton(
             icon: const Icon(Icons.mail),
             onPressed: _showInbox,

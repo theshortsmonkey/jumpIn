@@ -1,11 +1,8 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import './api.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:io';
 
 class UploadImageForm extends StatefulWidget {
   const UploadImageForm({super.key});
@@ -32,8 +29,6 @@ class _UploadImageForm extends State<UploadImageForm> {
       });
     }
   }
-  File? file;
-  FilePickerResult? result;
   @override
   Widget build(BuildContext context) {
     return 
@@ -75,25 +70,6 @@ class _UploadImageForm extends State<UploadImageForm> {
             onPressed: _handleUploadPic,
             child: const Text('Upload image'),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                print('in picker');
-                result = await FilePicker.platform.pickFiles();
-                print('after picking');
-                if (result != null) {
-                  if (!kIsWeb) {
-                   file = File(result!.files.single.path!);
-                 }
-                 setState(() {});
-               } else {
-                 // User canceled the picker
-               }
-             } catch (e) {
-              print(e);
-             }
-              },
-          child: const Text('Pick file'))
         ],
       ),
     );
