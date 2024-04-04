@@ -15,7 +15,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   void _setDefaultUser() async {
-    final futureUser = fetchUserByUsername('testUSername1');
+    final futureUser = fetchUserByUsername('testUSername4');
     futureUser.then((user) {
     context.read<AuthState>().setUser(user);
       Navigator.of(context).pushNamed('/profile');
@@ -35,6 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   void _showProfilePage() {
   Navigator.of(context).pushNamed('/profile');
+  }
+  void _handleLogout() {
+    context.read<AuthState>().logout();
+    Navigator.of(context).pushNamed('/');
   }
 
   @override
@@ -65,8 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 IconButton(
                 icon : const Icon(Icons.report),
                 onPressed:_showSignUpScreen ,
+                ),
+                IconButton(
+                icon : const Icon(Icons.logout),
+                onPressed:_handleLogout ,
                 )
-                
       ],
       ),
       body: Center(

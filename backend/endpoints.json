@@ -563,7 +563,21 @@
       "date_and_time": "2024-04-02T14:19:35.121Z",
       "message": "Please pick me up outside Tesco"
     }]
+},
+
+"GET /rides/:username/messages" : {
+  "description": "retrieves all messages relevant to a user",
+  "exampleResponse" : [{ 
+      "to": "jamal_singh",
+      "from": "lucy_jones",
+      "date_and_time": "2024-04-02T14:19:35.121Z",
+      "message": "Please pick me up outside Tesco"
+    },
+    { 
+      "to": "lucy_jones",
+      "from": "jamal_singh",
+      "date_and_time": "2024-04-02T14:21:35.121Z",
+      "message": "ok see you there"
+    }]
 }
-
-
 }

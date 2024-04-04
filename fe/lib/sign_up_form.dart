@@ -45,8 +45,11 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _isPasswordValid = true;
   bool _isPasswordObscured = true;
   double _formProgress = 0;
+  bool _doesUserExist = false;
 
   void _showWelcomeScreen() async {
+    final provider = Provider.of<AuthState>(context, listen:false);
+    final currUser = provider.userInfo;
     final userData = User(
       firstName: _firstNameTextController.text,
       lastName: _lastNameTextController.text,
@@ -55,14 +58,25 @@ class _SignUpFormState extends State<SignUpForm> {
       password: _passwordTextController.text,
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
+      identity_verification_status: currUser.identity_verification_status,
+      driver_verification_status: currUser.driver_verification_status,
+      car:currUser.car
     );
     if (widget.submitType == 'post') {
+        setState(() {
+          _doesUserExist = false;
+        });
+      try {
     final postedUser = await postUser(userData);
-    final futureUser = fetchUserByUsername(postedUser.username);
-    futureUser.then((user) {
-      context.read<AuthState>().setUser(user);
-      Navigator.of(context).pushNamed('/');
-    });
+    final futureUser = await fetchUserByUsername(postedUser.username);
+      context.read<AuthState>().setUser(futureUser);
+      Navigator.of(context).pushNamed('/profile');
+      } catch (e) {
+        print(e);
+        setState(() {
+          _doesUserExist = true;
+        });
+      }
     } else {
       final patchedUser = await patchUser(userData);
       final futureUser = fetchUserByUsername(patchedUser.username);
@@ -221,6 +235,7 @@ class _SignUpFormState extends State<SignUpForm> {
             _formProgress > 0.99 ? _showWelcomeScreen : null,
             child: Text(titleText),
           ),
+        _doesUserExist ? Text('Username already exists', style: Theme.of(context).textTheme.bodyLarge) : const Text(''),
         ],
       ),
     );
