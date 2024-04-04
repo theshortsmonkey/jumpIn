@@ -116,7 +116,7 @@ module.exports = {
           },
         ],
       })
-      .project({ chats: 1 })
+      .project({ id: 1, chats: 1, from: 1, to: 1 })
       .toArray();
     const filteredChats = findRides.map((ride) => {
       ride.chats = ride.chats.filter(

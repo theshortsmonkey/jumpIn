@@ -9,9 +9,11 @@ import "post_ride_page.dart";
 import "./test_page.dart";
 import './all_rides.dart';
 import './single_ride.dart';
+import './inbox.dart';
 import 'package:google_fonts/google_fonts.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
+import './ride_chat.dart';
 import "./validate_licence.dart";
 import "./validate_car.dart";
 
@@ -65,7 +67,9 @@ class MyApp extends StatelessWidget {
         "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide(),
         '/editprofile': (context) => const EditProfilePage(),
-        //'/uploadProfilePic': (context) => const UploadProfilePic(),
+        '/inbox': (context) => const GetMessage(),
+        '/ridechat': (context) => const GetRideChat(),
+        '/uploadProfilePic': (context) => const UploadProfilePic(),
         '/validatelicence': (context) => const ValidateLicencePage(),
         '/validatecar': (context) => const ValidateCarPage(),
         }

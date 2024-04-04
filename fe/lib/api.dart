@@ -4,9 +4,10 @@ import 'package:enhanced_http/enhanced_http.dart';
 import 'package:fe/classes/post_ride_class.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_ride_class.dart';
+import 'classes/get_message_class.dart';
 import 'dart:async';
 import "./classes/get_user_class.dart";
-import "dart:convert";
+import './classes/get_chat_class.dart';
 import "package:http/http.dart" as http;
 import 'package:dio/dio.dart' as dio_http;
 import 'package:http_parser/http_parser.dart';
@@ -60,9 +61,9 @@ Future<List<Ride>> fetchRides({
 }
 
 Future<Ride> fetchRideById(rideId) async {
-  final response = await httpEnhanced.get('/rides/${rideId}'); //hardcoded 
+  final response = await httpEnhanced.get('/rides/${rideId}'); 
   if (response.isNotEmpty) {
-      return Ride.fromJson(response as Map<String, dynamic>);
+    return Ride.fromJson(response as Map<String, dynamic>);
   } else {
     throw Exception('No ride found');
   }
@@ -92,9 +93,10 @@ Future<User> fetchUserByUsername(username) async {
 
 Future<User> postUser(user) async {
   String json = jsonEncode(user);
-  final response = await http.post(Uri.parse('http://localhost:1337/users'), headers: {"Content-Type": "application/json"},body: json);
-  if(response.statusCode == 200) {
-   var user = User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  final response = await http.post(Uri.parse('http://localhost:1337/users'),
+      headers: {"Content-Type": "application/json"}, body: json);
+  if (response.statusCode == 200) {
+    var user = User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     return user;
   }
   else{
@@ -111,9 +113,8 @@ Future<User> patchUser(user) async {
       return User.fromJson(item as Map<String, dynamic>);
     }).toList();
     return users[0];
-  }
-  else{
-  throw Exception("User not found");
+  } else {
+    throw Exception("User not found");
   }
 }
 Future fetchLatLong(city) async {
@@ -135,34 +136,12 @@ Future<User?>deleteUser(user) async {
 
 //upload image for user
 Future<String?> uploadUserProfilePic(String username, String filePath) async {
-  // final file = File(filePath);
-  // dio_http.FormData formData = dio_http.FormData.fromMap({
-  // 'file': await dio_http.MultipartFile.fromFile(
-  //   file.path, filename:  file.path.split('/').last,
-  //   contentType: MediaType("image", "jpeg"),
-  // ),
-  // });
-  // dio_http.Dio dio = new dio_http.Dio();
-  // print('in api call');
-  // // final response = await dio.post('http://localhost:1337/users/${username}/image',data: formData);
-  // final uri = Uri.parse("http://localhost:1337/users/${username}/image");
-  // FileList files = List(filePath);
-  // final fileName = filePath.split('/').last;
-  // File file = File(files,fileName);
-  // var request = http.MultipartRequest('POST', uri);
-  // print('test');
-  // request.files.add(http.MultipartFile.fromPath('file', file.path));
-  // request.files.add(await http.MultipartFile.fromPath('file', '/home/theshortsmonkey/northcoders/projects/jumpIn/fe/tmp/kermit-70118_1280.jpg'));
-  // print(request);
-  
-  // var response = await request.send();
-  // if (response.statusCode == 200) {
-  //   print('upload successful');
-  //   return 'good';
-  // } else {
-  //   print('upload failed');
-  //   return 'bad';
-  // }
+  final response = await http.post(Uri.parse('http://localhost:1337/users/$username/image'), body: jsonEncode({'filePath':filePath}));
+  if (response.statusCode == 201) {
+    return 'good';
+  } else {
+    return 'bad';
+  }
 }
 
 Future deleteRide(rideId) async {
@@ -183,14 +162,14 @@ Future fetchDistance(waypoints) async {
 
 Future fetchFuelPrice(fuelType) async {
   final double fuelPrice;
-  final response = await httpFuel.get('/en_gb/united-kingdom/home/fuelprices/fuel_prices_data.json',
-    headers: {
-      "accept": '*/*',
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
-    }
-  );
-  if(fuelType == "PETROL"){
+  final response = await httpFuel.get(
+      '/en_gb/united-kingdom/home/fuelprices/fuel_prices_data.json',
+      headers: {
+        "accept": '*/*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
+      });
+  if (fuelType == "PETROL") {
     fuelPrice = response["stations"][0]['prices']['E10']; //petrol price
   } else {
     fuelPrice = response["stations"][0]['prices']['B7']; //diesel price
@@ -201,7 +180,8 @@ Future fetchFuelPrice(fuelType) async {
 Future fetchCarDetails(carReg) async {
   try {
     final response = await http.post(
-      Uri.parse('https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles'),
+      Uri.parse(
+          'https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles'),
       headers: {
         'x-api-key': '1gZwZ4vfFN1TbScqIP7FG4ccTa8SkB95aJN9wHBs',
         "accept": '*/*',
@@ -230,10 +210,42 @@ Future<Ride> postRide(ride) async {
   }
 }
 
+Future<List<Message>> fetchMessagesByUsername(username) async {
+  print('start');
+  final response = await httpEnhanced.get('/rides/$username/messages');
 
+  if (response.isNotEmpty) {
+    List<Message> messages = response.map<Message>((item) {
+      return Message.fromJson(item as Map<String, dynamic>);
+    }).toList();
+    return messages;
+  } else {
+    throw Exception('No users found');
+  }
+}
 
+Future<List<Chat>> fetchMessagesByRideId(ride_id, username) async {
+  print('start');
+  final response = await httpEnhanced.get('/rides/$ride_id/$username/messages');
+  if (response.isNotEmpty) {
+    List<Chat> chats = response.map<Chat>((item) {
+      return Chat.fromJson(item as Map<String, dynamic>);
+    }).toList();
+    print(chats);
+    return chats;
+  } else {
+    throw Exception('No users found');
+  }
+}
 
-
-
-
-
+Future<Message> postMessage(message) async {
+  String json = jsonEncode(message);
+  final response = await http.post(Uri.parse('http://localhost:1337/rides/${message.id}/messages'),
+      headers: {"Content-Type": "application/json"}, body: json);
+  if (response.statusCode == 200) {
+    var message = Message.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return message;
+  } else {
+    throw Exception("Ride not found");
+  }
+}

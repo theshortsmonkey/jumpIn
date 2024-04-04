@@ -7,6 +7,7 @@
 
 const { mongo } = require("mongoose");
 const { createWriteStream, createReadStream, unlink } = require("fs");
+const axios = require('axios');
 
 module.exports = {
   deleteUser: async (req, res) => {
@@ -69,22 +70,32 @@ module.exports = {
   imageUpload: async (req, res) => {
     try {
       const db = Users.getDatastore().manager;
-      req.file(`image`).upload(function (err, files) {
-        if (err) return res.serverError(err);
-        const bucket = new mongo.GridFSBucket(db, { bucketName: "images" });
-        const streamWrite = bucket.openUploadStream(files[0].filename, {
+      const findImage = await db
+        .collection("images.files")
+        .findOne({ metadata: { username: req.params.username } });
+
+      const bucket = new mongo.GridFSBucket(db, { bucketName: 'images' })
+      if (findImage) bucket.delete(findImage._id)
+        const streamWrite = bucket.openUploadStream('profile_pic.jpg', {
           metadata: { username: req.params.username },
         });
-        createReadStream(files[0].fd)
-          .pipe(streamWrite)
-          .on("close", () => {
-            unlink(files[0].fd, () => {});
+        if (req.body.filePath.startsWith('http')) {
+          axios({
+            method: 'GET',
+            url: req.body.filePath,
+            responseType: 'stream'
+          }).then((res) => {
+            res.data.pipe(streamWrite)
           });
+        } else {
+          createReadStream(req.body.filePath)
+            .pipe(streamWrite)
+        }
         res.status(201);
         return res.json({
-          message: files[0].filename + " uploaded successfully!",
+          message: "image uploaded successfully!",
         });
-      });
+      // });
     } catch (error) {
       return res.badRequest(error);
     }
