@@ -90,15 +90,17 @@ void _handleDelete () async {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: _handleDelete,
-                    style:ElevatedButton.styleFrom(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/uploadProfilePic');
+                    },
+                    style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                     ),
-                    child: Text(_deleteButtonText)
-                )
+                    child: const Text('Upload Profile Picture')
+                ),
               ),
               const SizedBox(height: 40),
-              new CircleAvatar(
+              CircleAvatar(
                 radius: 70,
                 backgroundImage: NetworkImage(imgUrl),
               ),
@@ -140,7 +142,17 @@ void _handleDelete () async {
                     ),
                     child: const Text('Validate vehicle')
                 ),
-          )
+          ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: _handleDelete,
+                    style:ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: Text(_deleteButtonText)
+                )
+              ),
           ]
           ),
         )

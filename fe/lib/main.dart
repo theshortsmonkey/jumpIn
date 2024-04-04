@@ -1,4 +1,5 @@
 import 'package:fe/edit_profile_page.dart';
+import 'package:fe/upload_profile_pic.dart';
 
 import './login_page.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,8 @@ class MyApp extends StatelessWidget {
         "/test": (context) => const TestPage(),
         "/allrides": (context) => const GetRide(),
         '/singleridetest': (context) => const SingleRide(),
-        '/editprofile': (context) => const EditProfilePage()
+        '/editprofile': (context) => const EditProfilePage(),
+        '/uploadProfilePic': (context) => const UploadProfilePic()
         }
     )
    );

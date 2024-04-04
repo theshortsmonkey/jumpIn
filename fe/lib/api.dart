@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:enhanced_http/enhanced_http.dart';
 import 'package:flutter/material.dart';
 import 'classes/get_ride_class.dart';
@@ -6,6 +7,8 @@ import 'dart:async';
 import "./classes/get_user_class.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
+import 'package:dio/dio.dart' as dio_http;
+import 'package:http_parser/http_parser.dart';
 
 EnhancedHttp httpEnhanced = EnhancedHttp(baseURL: 'http://localhost:1337');
 EnhancedHttp httpGeoapify = EnhancedHttp(baseURL: 'https://api.geoapify.com/v1/routing');
@@ -93,6 +96,38 @@ Future<User?>deleteUser(user) async {
   } else {
     throw Exception("Failed to delete user account");
   }
+}
+
+//upload image for user
+Future<String?> uploadUserProfilePic(String username, String filePath) async {
+  // final file = File(filePath);
+  // dio_http.FormData formData = dio_http.FormData.fromMap({
+  // 'file': await dio_http.MultipartFile.fromFile(
+  //   file.path, filename:  file.path.split('/').last,
+  //   contentType: MediaType("image", "jpeg"),
+  // ),
+  // });
+  // dio_http.Dio dio = new dio_http.Dio();
+  // print('in api call');
+  // // final response = await dio.post('http://localhost:1337/users/${username}/image',data: formData);
+  // final uri = Uri.parse("http://localhost:1337/users/${username}/image");
+  // FileList files = List(filePath);
+  // final fileName = filePath.split('/').last;
+  // File file = File(files,fileName);
+  // var request = http.MultipartRequest('POST', uri);
+  // print('test');
+  // request.files.add(http.MultipartFile.fromPath('file', file.path));
+  // request.files.add(await http.MultipartFile.fromPath('file', '/home/theshortsmonkey/northcoders/projects/jumpIn/fe/tmp/kermit-70118_1280.jpg'));
+  // print(request);
+  
+  // var response = await request.send();
+  // if (response.statusCode == 200) {
+  //   print('upload successful');
+  //   return 'good';
+  // } else {
+  //   print('upload failed');
+  //   return 'bad';
+  // }
 }
 
 Future fetchDistance(waypoints) async {
