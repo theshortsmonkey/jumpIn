@@ -1,11 +1,9 @@
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 import './api.dart';
 import "./auth_provider.dart";
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:io';
 
 class UploadImageForm extends StatefulWidget {
   const UploadImageForm({super.key});
@@ -18,22 +16,30 @@ class UploadImageForm extends StatefulWidget {
 class _UploadImageForm extends State<UploadImageForm> {
   final _imageUrlController = TextEditingController();
   String _imageUrl = '';
+  bool _isWebImage = false;
   
   void _handleUploadPic() async {  
     try {
     final currUser = context.read<AuthState>().userInfo;
-      final uploadResponse = await uploadUserProfilePic(currUser.username,_imageUrlController.text);
-    print(uploadResponse);
-    // Navigator.of(context).pushNamed('/profile');
+      await uploadUserProfilePic(currUser.username,_imageUrlController.text);
+      await Future.delayed(const Duration(seconds: 1), () async {
+        final futureUser = await fetchUserByUsername(currUser.username);
+        context.read<AuthState>().setUser(futureUser);
+        imageCache.clear();
+        imageCache.clearLiveImages();
+        Navigator.of(context).pushNamed('/profile');
+    });
     } catch (e) {
       print(e);
-      setState(() {
-        // _isUserExist = false;
-      });
     }
   }
-  File? file;
-  FilePickerResult? result;
+  ImageProvider? _setImage () {
+    ImageProvider? profilePic;
+    _isWebImage 
+                  ? _imageUrl != '' ? profilePic = NetworkImage(_imageUrl): null
+                  : _imageUrl != '' ? profilePic = AssetImage(_imageUrl): null;
+    return profilePic;
+  }
   @override
   Widget build(BuildContext context) {
     return 
@@ -46,9 +52,12 @@ class _UploadImageForm extends State<UploadImageForm> {
             padding: const EdgeInsets.all(8),
             child: TextFormField(
               controller: _imageUrlController,
-              decoration: const InputDecoration(labelText: 'image url'),
+              decoration: const InputDecoration(labelText: 'image url/filepath'),
               onChanged: (value) {
               setState(() {
+                _imageUrlController.text.startsWith('http') 
+                ? _isWebImage = true 
+                : _isWebImage = false;
                 _imageUrl = _imageUrlController.text;
               });
               },
@@ -57,7 +66,7 @@ class _UploadImageForm extends State<UploadImageForm> {
               const SizedBox(height: 40),
               CircleAvatar(
                 radius: 70,
-                backgroundImage: _imageUrl != '' ? AssetImage(_imageUrl) : null,
+                backgroundImage: _setImage()
               ),
           TextButton(
             style: ButtonStyle(
@@ -75,25 +84,6 @@ class _UploadImageForm extends State<UploadImageForm> {
             onPressed: _handleUploadPic,
             child: const Text('Upload image'),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                print('in picker');
-                result = await FilePicker.platform.pickFiles();
-                print('after picking');
-                if (result != null) {
-                  if (!kIsWeb) {
-                   file = File(result!.files.single.path!);
-                 }
-                 setState(() {});
-               } else {
-                 // User canceled the picker
-               }
-             } catch (e) {
-              print(e);
-             }
-              },
-          child: const Text('Pick file'))
         ],
       ),
     );

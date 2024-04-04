@@ -19,6 +19,7 @@ bool _isDeleted = false;
 bool _areYouSure = false;
 String _deleteButtonText ='Delete your account';
 dynamic userData;
+String imgUrl = '';
 @override
 void initState() {
   super.initState();
@@ -27,6 +28,10 @@ void initState() {
     if (userData.identity_verification_status && userData.driver_verification_status) {
       isDriver = true;
     }
+
+      userData = context.read<AuthState>().userInfo;
+      imgUrl = "http://localhost:1337/users/${userData.username}/image";
+      
 }
 
 void _handleDelete () async {
@@ -49,8 +54,10 @@ void _handleDelete () async {
 
   @override
   Widget build(BuildContext context) {
-    final userData = context.read<AuthState>().userInfo;
-    final imgUrl = "http://localhost:1337/users/${userData.username}/image";
+    // setState(() {
+    //   userData = context.read<AuthState>().userInfo;
+    //   imgUrl = "http://localhost:1337/users/${userData.username}/image";
+    // });
     return context.read<AuthState>().isAuthorized
     ? Scaffold(
       appBar: CustomAppBar(
@@ -95,19 +102,19 @@ void _handleDelete () async {
                     child: const Text('Edit Profile')
                 ),
               ),
-              // const SizedBox(height: 10),
-              // SizedBox(
-              //   width: double.infinity,
-              //   child: ElevatedButton(
-              //       onPressed: () {
-              //         Navigator.of(context).pushNamed('/uploadProfilePic');
-              //       },
-              //       style: ElevatedButton.styleFrom(
-              //         padding: const EdgeInsets.all(15),
-              //       ),
-              //       child: const Text('Upload Profile Picture')
-              //   ),
-              // ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/uploadProfilePic');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                    ),
+                    child: const Text('Upload Profile Picture')
+                ),
+              ),
               const SizedBox(height: 20),
               Container(
                 padding: EdgeInsets.all(7),
